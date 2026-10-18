@@ -1,0 +1,362 @@
+/*
+ * The wiki shell shared by every zypec project site: the bar, the contents, guides, reference rows,
+ * the front page and the way on. A site recolors it by redefining the --accent* tokens, see
+ * README.md; nothing in here names a project.
+ *
+ * One accent over quiet neutrals, and room around everything: type that is read for a while, rows
+ * that breathe.
+ */
+:root{
+  --bg:#ffffff; --side:#faf9f7; --panel:#ffffff; --sunk:#f4f2ef; --hover:#f1eeea;
+  --ink:#1c1a18; --ink-2:#4b4641; --muted:#857d75; --line:#ebe7e2; --line-2:#e0dbd4;
+  --accent:#b0602a; --accent-ink:#9a5222; --accent-soft:#b0602a12; --accent-line:#b0602a40;
+  --req:#b3352f; --gap:#8a5a12;
+  --code:#2a2622; --code-bg:#f7f5f2; --code-a:#2d6f6a;
+  --stage:#191715; --stage-2:#24211e;
+  --shadow:0 1px 2px #1c1a180a, 0 8px 24px #1c1a180d;
+  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --r:12px; --r-sm:8px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --bg:#121110; --side:#161514; --panel:#1a1918; --sunk:#201e1c; --hover:#23211f;
+    --ink:#efebe6; --ink-2:#c7c0b8; --muted:#8f877e; --line:#262422; --line-2:#302d2a;
+    --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45;
+    --req:#ec8a83; --gap:#ddb06a;
+    --code:#e6e0d9; --code-bg:#1b1a18; --code-a:#7cc3b8;
+    --stage:#0d0c0b; --stage-2:#1a1816;
+    --shadow:0 1px 2px #0006, 0 8px 24px #0005;
+  }
+}
+:root[data-theme=dark]{
+  --bg:#121110; --side:#161514; --panel:#1a1918; --sunk:#201e1c; --hover:#23211f;
+  --ink:#efebe6; --ink-2:#c7c0b8; --muted:#8f877e; --line:#262422; --line-2:#302d2a;
+  --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45;
+  --req:#ec8a83; --gap:#ddb06a;
+  --code:#e6e0d9; --code-bg:#1b1a18; --code-a:#7cc3b8;
+  --stage:#0d0c0b; --stage-2:#1a1816;
+  --shadow:0 1px 2px #0006, 0 8px 24px #0005;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
+  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+code,pre,kbd,.k,dd{font-family:var(--mono)}
+a{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid var(--accent-line)}
+a:hover{border-bottom-color:currentColor}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[hidden]{display:none!important}
+
+/* the bar along the top ------------------------------------------------- */
+header{position:sticky;top:0;z-index:10;height:64px;display:flex;gap:20px;align-items:center;
+  padding:0 28px;background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);
+  border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:16px;font-weight:650;display:flex;align-items:center;gap:10px;white-space:nowrap;
+  letter-spacing:-.01em;cursor:pointer}
+header h1 svg{width:16px;height:16px;display:block}
+header h1 small{font-size:16px;font-weight:400;color:var(--muted)}
+header .ver{color:var(--muted);font-family:var(--mono);font-size:12px;padding:2px 8px;border-radius:999px;
+  background:var(--sunk)}
+.search{position:relative;flex:1;max-width:560px;margin:0 auto}
+#q{width:100%;height:40px;padding:0 44px 0 40px;border:1px solid var(--line-2);border-radius:999px;
+  background:var(--panel);color:var(--ink);font:inherit;font-size:14.5px;transition:border-color .15s,box-shadow .15s}
+#q:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+#q::placeholder{color:var(--muted)}
+.search svg{position:absolute;left:14px;top:50%;width:16px;height:16px;transform:translateY(-50%);color:var(--muted);
+  pointer-events:none}
+.search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11.5px;color:var(--muted);
+  border:1px solid var(--line-2);border-radius:6px;padding:0 6px;line-height:20px;background:var(--side)}
+#themed,#navtoggle{height:38px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink-2);border-radius:999px;
+  padding:0 14px;cursor:pointer;font:inherit;font-size:13.5px;display:inline-flex;gap:8px;align-items:center;
+  transition:border-color .15s,color .15s}
+#themed:hover,#navtoggle:hover{border-color:var(--muted);color:var(--ink)}
+#themeicon{font-size:14px;line-height:1}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+#navtoggle{display:none}
+
+/* contents down the side ------------------------------------------------ */
+.wrap{display:flex;align-items:flex-start}
+nav{flex:0 0 288px;width:288px;background:var(--side);border-right:1px solid var(--line);padding:24px 14px 80px;
+  position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;scrollbar-width:thin}
+nav .empty{padding:16px 12px;font-size:14px}
+nav .grp{font-size:12px;color:var(--muted);margin:22px 12px 4px;font-weight:600;letter-spacing:.02em}
+nav .grp:first-child{margin-top:0}
+nav a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 12px;margin:1px 0;
+  border:0;border-radius:var(--r-sm);color:var(--ink-2);font-size:14.5px;line-height:1.45;font-family:var(--mono);
+  overflow-wrap:anywhere;transition:background .12s,color .12s}
+nav a:hover{color:var(--ink);background:var(--hover)}
+nav a.on{color:var(--accent-ink);background:var(--accent-soft);font-weight:600}
+nav a .n{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;font-weight:400;font-family:var(--body)}
+nav a.guide{font-family:var(--body);font-size:14.5px}
+nav .navfoot{margin:28px 12px 0;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;
+  line-height:1.7}
+nav .navfoot a{display:inline;padding:0;margin:0;font-family:var(--body);font-size:12.5px;color:var(--ink-2);
+  text-decoration:underline;text-underline-offset:2px;background:none}
+
+/* the page -------------------------------------------------------------- */
+main{flex:1;min-width:0;padding:40px 56px 120px}
+main>.page{max-width:1040px;margin:0 auto}
+.crumb{font-size:13px;color:var(--muted);margin:0 0 10px;font-weight:500}
+h2{font-size:40px;line-height:1.15;font-weight:700;margin:0 0 12px;letter-spacing:-.025em;text-wrap:balance}
+.type h2{font-family:var(--mono);font-size:36px;letter-spacing:-.02em}
+.aka{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:14px;margin:0 0 18px}
+.aka code{background:var(--sunk);color:var(--code);padding:2px 8px;border-radius:6px;font-size:13px}
+.aka a code{color:var(--accent-ink)}
+.aka a{border:0}
+.lede{font-size:20px;line-height:1.55;margin:0 0 14px;max-width:62ch;color:var(--ink);text-wrap:pretty;letter-spacing:-.005em}
+.detail{color:var(--ink-2);max-width:68ch;margin:0 0 8px;white-space:pre-wrap;text-wrap:pretty;font-size:16.5px}
+.credit,article.guide p.credit{max-width:68ch;margin:14px 0 0;padding:12px 16px;border-left:3px solid var(--accent-line);background:var(--accent-soft);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;color:var(--ink-2);font-size:14.5px;line-height:1.6}
+article.guide p.credit{margin:0 0 14px}
+.credit>span:first-child{color:var(--muted)}
+
+figure.ex{margin:28px 0 0}
+figure.ex figcaption{color:var(--muted);font-size:13px;margin-bottom:8px;font-weight:500}
+pre{background:var(--code-bg);color:var(--code);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:16px 20px;overflow-x:auto;font-size:13.5px;line-height:1.7;margin:0;white-space:pre-wrap;word-break:break-word}
+
+/* Highlighting an example is not decoration: a script line is a key, a handful of argument names
+   and their values, and telling those three apart at a glance is most of reading one. */
+pre .c-com{color:var(--muted);font-style:italic}
+pre .c-key,pre .c-type{color:var(--accent-ink);font-weight:600}
+pre .c-arg{color:var(--code-a)}
+pre .c-str,pre .c-hex{color:var(--gap)}
+pre .c-num{color:var(--req)}
+pre .c-var{color:var(--req);font-weight:600}
+
+h3{font-size:22px;color:var(--ink);margin:56px 0 16px;font-weight:650;letter-spacing:-.015em}
+h3 .count{font-size:14px;color:var(--muted);font-weight:400;margin-left:10px;letter-spacing:0}
+
+/* a guide ---------------------------------------------------------------- */
+article.guide{max-width:800px;margin:0}
+article.guide h2{font-size:34px;margin-bottom:10px}
+article.guide h3{font-size:20px;margin:40px 0 10px}
+article.guide p{margin:0 0 14px;color:var(--ink-2);text-wrap:pretty;font-size:16px;line-height:1.6}
+article.guide p.lede{font-size:18px;line-height:1.55;color:var(--ink);margin-bottom:20px}
+article.guide pre{margin:0 0 18px}
+article.guide code,.arg .s code,.body code,.lede code,.detail code,.sheet code{background:var(--sunk);color:var(--code);
+  padding:1px 6px;border-radius:5px;font-size:.86em;font-family:var(--mono)}
+article.guide pre code{background:none;padding:0}
+article.guide code{overflow-wrap:anywhere}
+article.guide b,article.guide strong{color:var(--ink);font-weight:650}
+article.guide kbd,.sheet kbd{font-size:.82em;border:1px solid var(--line-2);border-bottom-width:2px;border-radius:5px;
+  padding:0 5px;background:var(--side)}
+article.guide ul,article.guide ol{margin:0 0 18px;padding:0;list-style:none;border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden}
+article.guide li{padding:10px 18px;border-top:1px solid var(--line);color:var(--ink-2);font-size:15.5px}
+article.guide li:first-child{border-top:0}
+
+/* A run of terms with nothing between them reads as one paragraph, so every row keeps a rule of
+   its own. */
+dl.files{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:0 24px;margin:0 0 20px;
+  border:1px solid var(--line);border-radius:var(--r);padding:2px 18px}
+dl.files dt{font-family:var(--mono);font-size:13.5px;color:var(--ink);font-weight:600;padding:10px 0;border-top:1px solid var(--line)}
+dl.files dd{margin:0;color:var(--ink-2);padding:9px 0;border-top:1px solid var(--line);font-family:var(--body);font-size:15px;
+  font-variant-numeric:normal}
+dl.files dt:first-of-type,dl.files dt:first-of-type+dd{border-top:0}
+
+/* The folder, drawn as one: folders first, told apart by their icon rather than by a slash
+   somebody has to notice. */
+:root{--icon-dir:url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'><path%20d='M1.6%203.2h4.1l1.5%201.9h7.2a1%201%200%200%201%201%201v7.1a1%201%200%200%201-1%201H1.6a1%201%200%200%201-1-1V4.2a1%201%200%200%201%201-1z'/></svg>");
+  --icon-file:url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'><path%20d='M3.6%201h5.6l4.2%204.2v8.8a1%201%200%200%201-1%201H3.6a1%201%200%200%201-1-1V2a1%201%200%200%201%201-1zm5.6%201.4v3.3h3.3z'/></svg>")}
+article.guide ul.tree{border:1px solid var(--line);border-radius:var(--r);padding:12px 18px;margin:0 0 20px}
+ul.tree li{border:0;padding:0}
+ul.tree li.dir{font-family:var(--mono);font-size:14px;color:var(--ink);font-weight:600}
+ul.tree ul{list-style:none;margin:6px 0 0;padding:0 0 0 20px;border:0;border-left:1px solid var(--line-2);border-radius:0}
+ul.tree ul li{display:grid;grid-template-columns:13em 1fr;gap:2px 24px;align-items:baseline;
+  padding:5px 0;position:relative;border:0;font-size:14.5px}
+ul.tree ul li::before{content:"";position:absolute;left:-20px;top:1.15em;width:12px;border-top:1px solid var(--line-2)}
+ul.tree ul li>code{background:none;padding:0;color:var(--ink-2);font-size:13.5px}
+ul.tree ul li>code::before{content:"";display:inline-block;width:14px;height:14px;margin-right:9px;vertical-align:-2px;
+  background:currentColor;opacity:.55;-webkit-mask:var(--icon-file) center/contain no-repeat;mask:var(--icon-file) center/contain no-repeat}
+ul.tree ul li.dir>code{color:var(--ink);font-weight:600}
+ul.tree ul li.dir>code::before{opacity:.85;-webkit-mask:var(--icon-dir) center/contain no-repeat;mask:var(--icon-dir) center/contain no-repeat}
+ul.tree ul li.dir+li:not(.dir){margin-top:4px;padding-top:10px;border-top:1px solid var(--line)}
+ul.tree ul li>span{color:var(--ink-2);font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.5;text-wrap:pretty}
+@media (max-width:560px){
+  ul.tree ul li{grid-template-columns:minmax(0,1fr);gap:2px}
+  ul.tree ul li>span{padding-bottom:4px}
+}
+table.cost{border-collapse:separate;border-spacing:0;width:100%;margin:0 0 20px;font-size:14.5px;font-variant-numeric:tabular-nums;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+table.cost th{text-align:left;font-size:13px;color:var(--muted);font-weight:600;padding:9px 16px;background:var(--side);
+  border-bottom:1px solid var(--line)}
+table.cost td{padding:9px 16px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+table.cost tr:last-child td{border-bottom:0}
+@media (max-width:560px){dl.files{grid-template-columns:1fr;gap:0}dl.files dt{padding-bottom:2px}dl.files dd{border-top:0;padding-top:0}}
+
+/* The arguments, a list of rows that each say what they are in a sentence, with what they accept
+   at the end of the row. */
+.args{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--panel)}
+.arg{border-top:1px solid var(--line)}
+.arg:first-child{border-top:0}
+.arg>summary,.arg>.sum{cursor:pointer;padding:16px 22px;display:grid;grid-template-columns:14em minmax(0,1fr) auto;
+  gap:10px 20px;align-items:baseline;list-style:none;transition:background .12s}
+.arg.flat>.sum{cursor:default}
+.arg>summary:hover{background:var(--hover)}
+.arg>summary::-webkit-details-marker{display:none}
+.arg>summary:hover .k,.arg[open]>summary .k{color:var(--accent-ink)}
+.arg[open]>summary{background:var(--side)}
+.arg .k{font-weight:600;font-size:14.5px;color:var(--ink);min-width:0;overflow-wrap:anywhere}
+.arg .s{color:var(--ink-2);font-size:15.5px;flex:1;min-width:180px}
+.arg .s strong,.body strong,.lede strong,.detail strong,.sheet strong{color:var(--ink);font-weight:650}
+.body em,.lede em,.detail em,.sheet em{font-style:italic}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.body{padding:4px 22px 22px calc(14em + 42px);background:var(--side)}
+.body p{margin:4px 0 12px;max-width:66ch;white-space:pre-wrap;color:var(--ink-2);text-wrap:pretty;font-size:15.5px}
+.body figure.ex{margin:16px 0 0}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:12px 0 0;font-size:14px}
+dt{color:var(--muted);font-family:var(--body)}
+dd{margin:0;color:var(--ink);font-variant-numeric:tabular-nums;font-size:13.5px}
+@media (max-width:720px){.arg>summary,.arg>.sum{display:flex;flex-wrap:wrap}.body{padding-left:22px}}
+
+/* What an argument is written as and whether it is needed: the type, which opens what that type
+   means, then whether it is required, then whether a variable can drive it. */
+.tag{font-size:12px;white-space:nowrap;font-family:var(--body);color:var(--muted);padding:2px 9px;border-radius:999px;
+  background:var(--sunk);line-height:1.5}
+button.tag{border:0;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--ink-2);transition:background .12s,color .12s}
+button.tag:hover{color:var(--accent-ink);background:var(--accent-soft)}
+.tag.req{color:var(--req);background:color-mix(in srgb,var(--req) 11%,transparent);font-weight:600}
+.tag.reqw{color:var(--req);background:color-mix(in srgb,var(--req) 8%,transparent)}
+.tag.und{color:var(--gap);background:color-mix(in srgb,var(--gap) 12%,transparent);font-weight:600}
+.tag.var,button.tag.var{font-family:var(--body);background:transparent;color:var(--muted);padding:2px 4px}
+button.tag.var:hover{color:var(--accent-ink);background:transparent;text-decoration:underline;text-underline-offset:3px}
+
+/* What a type of argument is, asked for from the word that names it. A sheet rather than a page
+   of its own: the question is asked while reading an argument, and answering it should not take
+   the reader off the argument. */
+.sheet{position:fixed;inset:0;z-index:20;background:#0007;display:flex;align-items:center;justify-content:center;padding:24px;
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.sheet .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+  padding:28px 32px;max-width:62ch;width:100%;max-height:82vh;overflow:auto;position:relative}
+.sheet h3{font-size:21px;margin:0 0 10px;font-family:var(--mono)}
+.sheet p{margin:0 0 14px;color:var(--ink-2);text-wrap:pretty}
+.sheet p.lede{color:var(--ink);font-size:17px}
+.sheet .x{position:absolute;top:16px;right:16px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink-2);
+  border-radius:999px;width:32px;height:32px;cursor:pointer;font-size:16px;line-height:1}
+.sheet .x:hover{border-color:var(--muted);color:var(--ink)}
+
+.empty{color:var(--muted);padding:48px 0;font-size:16px}
+[hidden]{display:none!important}
+
+@media (max-width:1100px){main{padding:36px 36px 120px}}
+/* On a phone the contents are a button, not the first screen and a half of every page. */
+@media (max-width:860px){
+  header{height:auto;flex-wrap:wrap;gap:12px;padding:12px 16px}
+  .search{order:5;flex-basis:100%;max-width:none;margin:0}
+  .search kbd{display:none}
+  #navtoggle{display:inline-flex;margin-left:auto}
+  header .ver,#themetext{display:none}
+  .wrap{flex-direction:column}
+  /* A drawer under the bar rather than the top of the page: opened from halfway down a page it is
+     where the reader is looking, and a search's results show the moment anything is typed. */
+  nav{display:none;position:fixed;top:var(--head,108px);left:0;right:0;bottom:0;width:auto;height:auto;z-index:9;
+    border-right:0;border-top:1px solid var(--line);padding:12px 10px 40px;box-shadow:0 12px 24px #0006}
+  nav.open{display:block}
+  body.navopen{overflow:hidden}
+  main{padding:28px 16px 96px;width:100%}
+  h2{font-size:30px}
+  .type h2{font-size:28px}
+  .lede,article.guide p.lede{font-size:18px}
+  article.guide p{font-size:16px}
+  .arg>summary,.arg>.sum{padding:14px 16px}
+  .body{padding:4px 16px 18px}
+  article.guide li{padding:12px 16px}
+  dl.files{padding:4px 16px}
+}
+
+/* the front page ------------------------------------------------------- */
+.home{max-width:1080px;margin:0 auto;padding:40px 40px 72px}
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.tile{position:relative;display:flex;flex-direction:column;gap:6px;padding:22px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);color:var(--ink);border-bottom:1px solid var(--line);
+  overflow:hidden;transition:border-color .15s,transform .15s}
+a.tile:hover{border-color:var(--accent-line);transform:translateY(-1px)}
+.tile b{font-size:16px;letter-spacing:-.01em}
+.tile span{color:var(--muted);font-size:14px;line-height:1.55}
+.tile .num{font-size:30px;font-weight:650;color:var(--accent-ink);letter-spacing:-.02em;line-height:1.1}
+.tile.hero{grid-column:span 4;flex-direction:row;align-items:stretch;gap:28px;padding:0}
+.hero .words{flex:1;padding:36px 36px 32px;display:flex;flex-direction:column;gap:12px;justify-content:center}
+.hero .kicker{margin:0;color:var(--accent-ink);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.hero h2{margin:0;font-size:42px;line-height:1.05;letter-spacing:-.03em}
+.hero p{margin:0;color:var(--ink-2);font-size:17px;max-width:46ch}
+.hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.btn{display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:999px;border:1px solid var(--line-2);
+  background:var(--panel);color:var(--ink);font-size:14.5px;font-weight:600}
+.btn:hover{border-color:var(--accent-line)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.hero figure{position:relative;margin:0;width:42%;min-height:300px;background:var(--stage)}
+.tile.wide{grid-column:span 2}
+.home h3{margin:44px 0 6px;font-size:22px;letter-spacing:-.01em}
+.home .under{margin:0 0 18px;color:var(--muted)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.gallery figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.gallery img,.gallery video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--stage)}
+.gallery figcaption{padding:10px 14px;font-size:14px;color:var(--ink-2)}
+.gallery .none{grid-column:1/-1;padding:36px;text-align:center;color:var(--muted);border:1px dashed var(--line-2);
+  border-radius:var(--r);background:var(--sunk)}
+@media (max-width:860px){
+  .home{padding:24px 16px 56px}
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tile.hero{grid-column:span 2;flex-direction:column}
+  .hero figure{width:100%;min-height:240px}
+  .hero .words{padding:26px 22px}
+  .hero h2{font-size:34px}
+}
+@media (max-width:520px){
+  .bento{grid-template-columns:minmax(0,1fr)}
+  .tile.hero,.tile.wide{grid-column:auto}
+}
+
+/* what a console says ---------------------------------------------------- */
+figure.console{margin:20px 0;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:#141414}
+figure.console figcaption{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:12px;font-weight:600;
+  color:#a8a29b;background:#1e1e1e;border-bottom:1px solid #2a2a2a;font-family:var(--body);letter-spacing:.02em}
+figure.console figcaption::before{content:"";width:8px;height:8px;border-radius:50%;background:#4ec66f}
+figure.console pre{margin:0;padding:14px 16px;background:transparent;border:0;color:#d6d3cf;
+  font-family:"JetBrains Mono","Cascadia Mono",Consolas,"SF Mono",Menlo,monospace;font-size:13.5px;line-height:1.6;white-space:pre-wrap}
+.guide.within{padding:0;margin-top:40px;border-top:1px solid var(--line);padding-top:8px}
+.guide.within .lede{font-size:17px}
+
+/* the way on, at the foot of a page --------------------------------------- */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:72px 0 0;padding-top:28px;border-top:1px solid var(--line)}
+.pager a{display:flex;flex-direction:column;gap:2px;padding:14px 18px;border:1px solid var(--line);border-radius:var(--r);
+  color:var(--ink);background:var(--panel);transition:border-color .15s,transform .15s}
+.pager a:hover{border-color:var(--accent-line);transform:translateY(-1px)}
+.pager small{color:var(--muted);font-size:12.5px;font-weight:500}
+.pager b{font-weight:600;font-size:15.5px}
+.pager b.mono{font-family:var(--mono);font-size:14.5px}
+.pager .next{grid-column:2;text-align:right}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .next{grid-column:1}}
+
+/* what a guide is made of, down its right side ------------------------------- */
+.guidewrap{display:grid;grid-template-columns:minmax(0,800px) 220px;gap:56px;align-items:start}
+.toc{position:sticky;top:96px;max-height:calc(100vh - 128px);overflow-y:auto;border-left:1px solid var(--line);
+  padding:2px 0 2px 18px;font-size:13.5px;line-height:1.45}
+.toc p{margin:0 0 10px;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.02em}
+.toc a{display:block;border:0;color:var(--ink-2);padding:4px 0;transition:color .12s}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--accent-ink);font-weight:600}
+@media (max-width:1360px){.guidewrap{display:block}.toc{display:none}}
+details.legend{margin:28px 0 0;color:var(--ink-2);font-size:14.5px}
+details.legend summary{cursor:pointer;color:var(--muted)}
+details.legend dl{grid-template-columns:auto 1fr;gap:8px 16px;margin-top:12px}
+details.legend dd{font-family:var(--body);font-size:14.5px;color:var(--ink-2)}
+
+.tile .icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink);
+  margin-bottom:6px}
+.tile .icon svg{width:18px;height:18px}
+.hero figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+article.guide figure{margin:0 0 20px}
+article.guide figure img{width:100%;display:block;border-radius:var(--r-sm);border:1px solid var(--line)}
+article.guide figure figcaption{color:var(--muted);font-size:13.5px;margin-top:8px}
+article.guide table{border-collapse:separate;border-spacing:0;width:100%;margin:0 0 20px;font-size:14.5px;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+article.guide th{text-align:left;font-size:13px;color:var(--muted);font-weight:600;padding:9px 16px;background:var(--side);
+  border-bottom:1px solid var(--line)}
+article.guide td{padding:9px 16px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+article.guide tr:last-child td{border-bottom:0}
+article.guide .args{margin:0 0 20px}

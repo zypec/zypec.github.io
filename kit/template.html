@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<meta name="description" content="__DESCRIPTION__">
+<link rel="icon" href="__ICON__">
+<script>
+try {
+  const theme = localStorage.getItem('zypec-theme') || localStorage.getItem('pp-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+} catch (unavailable) {}
+</script>
+<link rel="stylesheet" href="__KIT__wiki.css">
+__HEAD__
+</head>
+<body>
+<header>
+  <h1 id="brand" title="Home">__BRAND__ <small>Wiki</small></h1>
+  <span class="ver">__VERSION__</span>
+  <button id="navtoggle" type="button" aria-expanded="false" aria-controls="nav">Contents</button>
+  <div class="search">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.6"/><path d="m10.4 10.4 3.4 3.4"/></svg>
+    <input id="q" type="search" placeholder="__SEARCH__" autocomplete="off" aria-label="Search">
+    <kbd>/</kbd>
+  </div>
+  <button id="themed" type="button" aria-live="polite"><span id="themeicon" aria-hidden="true"></span><span id="themetext"></span></button>
+</header>
+
+<div class="wrap">
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+
+<div id="sheet" class="sheet" hidden></div>
+
+<script id="data" type="application/json">__DATA__</script>
+<script src="__KIT__wiki.js"></script>
+__SCRIPTS__
+</body>
+</html>

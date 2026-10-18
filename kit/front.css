@@ -1,0 +1,85 @@
+/* The pages around a wiki: a project's front page, its statistics, the portfolio itself. The wiki's
+   own palette and type, so moving from one to the other is moving between rooms of one house. A site
+   recolors it the same way it recolors the wiki, by redefining the --accent* tokens. */
+:root{
+  --bg:#ffffff; --side:#faf9f7; --panel:#ffffff; --sunk:#f4f2ef; --hover:#f1eeea;
+  --ink:#1c1a18; --ink-2:#4b4641; --muted:#857d75; --line:#ebe7e2; --line-2:#e0dbd4;
+  --accent:#b0602a; --accent-ink:#9a5222; --accent-soft:#b0602a12; --accent-line:#b0602a40;
+  --req:#b3352f; --gap:#8a5a12;
+  --code:#2a2622; --code-bg:#f7f5f2; --code-a:#2d6f6a;
+  --stage:#191715; --stage-2:#24211e;
+  --shadow:0 1px 2px #1c1a180a, 0 8px 24px #1c1a180d;
+  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --r:12px; --r-sm:8px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --bg:#121110; --side:#161514; --panel:#1a1918; --sunk:#201e1c; --hover:#23211f;
+    --ink:#efebe6; --ink-2:#c7c0b8; --muted:#8f877e; --line:#262422; --line-2:#302d2a;
+    --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45;
+    --req:#ec8a83; --gap:#ddb06a;
+    --code:#e6e0d9; --code-bg:#1b1a18; --code-a:#7cc3b8;
+    --stage:#0d0c0b; --stage-2:#1a1816;
+    --shadow:0 1px 2px #0006, 0 8px 24px #0005;
+  }
+}
+:root[data-theme=dark]{
+  --bg:#121110; --side:#161514; --panel:#1a1918; --sunk:#201e1c; --hover:#23211f;
+  --ink:#efebe6; --ink-2:#c7c0b8; --muted:#8f877e; --line:#262422; --line-2:#302d2a;
+  --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45;
+  --req:#ec8a83; --gap:#ddb06a;
+  --code:#e6e0d9; --code-bg:#1b1a18; --code-a:#7cc3b8;
+  --stage:#0d0c0b; --stage-2:#1a1816;
+  --shadow:0 1px 2px #0006, 0 8px 24px #0005;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[hidden]{display:none!important}
+
+header{position:sticky;top:0;z-index:10;height:64px;display:flex;gap:18px;align-items:center;padding:0 28px;
+  background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:saturate(1.4) blur(12px);
+  -webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+header .home{display:flex;align-items:center;gap:10px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
+header .home:hover{text-decoration:none}
+header .home svg{width:16px;height:16px}
+header nav{display:flex;gap:4px;margin-left:auto;align-items:center}
+header nav a{color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px}
+header nav a:hover,header nav a.on{background:var(--hover);color:var(--ink);text-decoration:none}
+#theme{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--panel);
+  color:var(--ink-2);border-radius:999px;height:34px;min-width:34px;padding:0 12px;font:inherit;font-size:13.5px;cursor:pointer}
+#theme:hover{border-color:var(--muted);color:var(--ink)}
+#theme .icon{font-size:14px;line-height:1}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+main{max-width:1120px;margin:0 auto;padding:0 28px 80px}
+footer{max-width:1120px;margin:0 auto;padding:28px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;
+  display:flex;gap:14px;flex-wrap:wrap}
+footer a{color:var(--ink-2)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;font-weight:600;
+  font-size:15px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink)}
+.btn:hover{text-decoration:none;border-color:var(--accent-line)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-ink)}
+.btn.soon{cursor:default;color:var(--muted);background:var(--sunk);border-style:dashed}
+
+.lede{font-size:19px;line-height:1.55;color:var(--ink-2);max-width:60ch;margin:0 0 22px}
+h1.title{font-size:40px;letter-spacing:-.025em;line-height:1.1;margin:44px 0 12px}
+h2{font-size:22px;letter-spacing:-.015em;margin:44px 0 6px}
+h3{font-size:15px;margin:0 0 10px}
+.note{color:var(--muted);font-size:14px}
+.notice{border:1px dashed var(--line-2);background:var(--sunk);border-radius:var(--r);padding:20px 22px;color:var(--ink-2)}
+
+@media (max-width:640px){
+  header{padding:0 16px;gap:8px}
+  header nav a{padding:6px 8px;font-size:13.5px}
+  #theme .text{display:none}
+  main{padding:0 16px 64px}
+  footer{padding:24px 16px}
+  h1.title{font-size:32px}
+}

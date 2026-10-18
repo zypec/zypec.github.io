@@ -1,0 +1,46 @@
+# Checks the shared kit and tells the project sites to rebuild when it changes.
+#
+# The project sites (zypec/ParticlesPlus, zypec/izomap) copy kit/ into their own build, so a change
+# here reaches them only when they are built again. Sending them a repository_dispatch needs a token
+# that may write to those repositories: a fine-grained personal access token with "Contents: read
+# and write" on them, stored as the KIT_DISPATCH_TOKEN secret. Without it the check still runs and
+# the sites pick the change up on their next push.
+name: kit
+
+on:
+  push:
+    branches: [main]
+    paths: ['kit/**', '.github/workflows/kit.yml']
+  pull_request:
+    paths: ['kit/**']
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: The scripts parse
+        run: for file in kit/*.js; do node --check "$file"; done
+      - name: The template keeps every placeholder the generators fill
+        run: |
+          for key in TITLE DESCRIPTION ICON KIT HEAD BRAND VERSION SEARCH DATA SCRIPTS; do
+            grep -q "__${key}__" kit/template.html || { echo "kit/template.html lost __${key}__"; exit 1; }
+          done
+
+  dispatch:
+    needs: check
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repository: [zypec/ParticlesPlus, zypec/izomap]
+    steps:
+      - name: Ask ${{ matrix.repository }} to rebuild its site
+        env:
+          GH_TOKEN: ${{ secrets.KIT_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then echo "No KIT_DISPATCH_TOKEN; ${{ matrix.repository }} rebuilds on its next push."; exit 0; fi
+          gh api "repos/${{ matrix.repository }}/dispatches" -f event_type=kit-changed
