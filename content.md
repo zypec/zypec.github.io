@@ -68,14 +68,14 @@ name: Izomap
 link: izomap/
 status: Coming soon
 color: #cf9c06
-image: izomap/gallery/hero.png
-caption: A cathedral and a town at dusk, photographed in game and printed onto maps.
+image: izomap/gallery/fog.png
+caption: A cathedral and a town at dusk, the land behind fading into the sky, photographed in game and printed onto maps.
 fact: What it is | Isometric photography printed onto maps
 fact: Runs on | Paper 26.3
 fact: License | Free and open source
 
 Put a camera in the world, aim it with a live preview, and print what it sees onto maps, from a single map
-to a 16x9 wall. Shadows, skies, depth of field, and no resource pack.
+to a 16x9 wall. Shadows, skies, depth of field, fog, and no resource pack.
 :::
 
 ::: project

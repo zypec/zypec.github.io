@@ -73,6 +73,11 @@ header .ver{color:var(--muted);font-family:var(--mono);font-size:12px;padding:2p
   padding:0 14px;cursor:pointer;font:inherit;font-size:13.5px;display:inline-flex;gap:8px;align-items:center;
   transition:border-color .15s,color .15s}
 #themed:hover,#navtoggle:hover{border-color:var(--muted);color:var(--ink)}
+/* The same links as the bar of the site's other pages, looked the same. */
+header .links{display:flex;gap:4px;align-items:center}
+header .links a{border:0;color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px;white-space:nowrap}
+header .links a:hover,header .links a.on{background:var(--hover);color:var(--ink)}
+nav .navlinks{display:none}
 #themeicon{font-size:14px;line-height:1}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 #navtoggle{display:none}
@@ -249,7 +254,10 @@ button.tag.var:hover{color:var(--accent-ink);background:transparent;text-decorat
   .search{order:5;flex-basis:100%;max-width:none;margin:0}
   .search kbd{display:none}
   #navtoggle{display:inline-flex;margin-left:auto}
-  header .ver,#themetext{display:none}
+  header .ver,#themetext,header .links{display:none}
+  /* A phone has no room in the bar, so the site's links open with the contents, all but the wiki's own. */
+  nav .navlinks{display:flex;flex-wrap:wrap;gap:4px;margin:20px 6px 0;padding-top:14px;border-top:1px solid var(--line)}
+  nav .navlinks a{display:inline-flex;margin:0;padding:6px 12px;border-radius:999px;font-family:var(--body)}
   .wrap{flex-direction:column}
   /* A drawer under the bar rather than the top of the page: opened from halfway down a page it is
      where the reader is looking, and a search's results show the moment anything is typed. */

@@ -11,6 +11,11 @@
  *     title,            the name in the contents' foot and in a guide's crumb fallback
  *     order: [...],     the groups of the contents, in order; any other group comes after them
  *     foot,             HTML at the foot of the contents
+ *     front,            the site's front page; the name in the bar opens it (the wiki's own home otherwise)
+ *     links: [{label, href, on, roomy}]   the site's top bar links, as on its other pages (see the kit's
+ *                       README); `on` marks the wiki's own, `roomy` the ones a phone drops, and an href
+ *                       of `#page` opens that wiki page. Drawn before the theme switch, and on a phone
+ *                       inside the contents instead
  *     home: {           the front page, unless an extension draws its own
  *       kicker, title, lede, cta: [{href, label, primary}], tiles: [{id | href, title, said, wide}]
  *     }
@@ -21,7 +26,7 @@
  */
 const Wiki = (() => {
   const DATA = JSON.parse(document.getElementById('data').textContent);
-  const SITE = Object.assign({title: '', order: ['Guides'], foot: '', home: null}, DATA.site || {});
+  const SITE = Object.assign({title: '', order: ['Guides'], foot: '', home: null, front: '', links: []}, DATA.site || {});
   DATA.guides = DATA.guides || [];
   const HOME = 'home';
 
@@ -52,6 +57,14 @@ const Wiki = (() => {
       .replace(/(^|[\s(])\*(\S|\S[^*]*?\S)\*(?=[\s.,;:)]|$)/g, (all, before, italic) => `${before}<em>${italic}</em>`)
       .replace(/\u0000(\d+)\u0000/g, (all, index) => spans[index]);
   }
+
+  /**
+   * The site's top bar links, the same ones and in the same order as on its front page, so walking
+   * from one page of a site to the next never moves a button.
+   */
+  const barLinks = links => links.map(link => `<a href="${esc(link.href)}"`
+    + (String(link.href).startsWith('#') ? ` data-t="${esc(link.href.slice(1))}"` : '')
+    + `${link.on ? ' class="on" aria-current="page"' : link.roomy ? ' class="roomy"' : ''}>${esc(link.label)}</a>`).join('');
 
   /** The page an address is on: `bugs/12` is on `bugs`, and the contents mark that entry for it. */
   const pageOf = id => String(id || '').split('/')[0];
@@ -105,7 +118,9 @@ const Wiki = (() => {
       }
     }
 
-    nav.innerHTML = (html || '<div class="empty">No match.</div>') + (SITE.foot ? `<div class="navfoot">${SITE.foot}</div>` : '');
+    nav.innerHTML = (html || '<div class="empty">No match.</div>')
+      + (SITE.links.length ? `<div class="navlinks">${barLinks(SITE.links.filter(link => !link.on))}</div>` : '')
+      + (SITE.foot ? `<div class="navfoot">${SITE.foot}</div>` : '');
     nav.querySelectorAll('a[data-t]').forEach(a => a.onclick = e => { e.preventDefault(); go(a.dataset.t); });
   }
 
@@ -477,7 +492,17 @@ const Wiki = (() => {
       event.preventDefault();
       go(decodeURIComponent(anchor.getAttribute('href').slice(1)));
     });
-    document.getElementById('brand').onclick = () => go(HOME);
+    const brand = document.getElementById('brand');
+    brand.onclick = () => SITE.front ? location.assign(SITE.front) : go(HOME);
+    if (SITE.front) brand.title = 'Front page';
+    if (SITE.links.length) {
+      const bar = document.createElement('span');
+      bar.className = 'links';
+      bar.innerHTML = barLinks(SITE.links);
+      // A link to one of the wiki's own pages is walked like the contents are.
+      bar.querySelectorAll('a[data-t]').forEach(a => a.onclick = e => { e.preventDefault(); go(a.dataset.t); });
+      document.getElementById('themed').before(bar);
+    }
 
     current = hashed() || HOME;
     render();

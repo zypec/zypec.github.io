@@ -31,6 +31,36 @@ with the same four under `@media (prefers-color-scheme:dark)` and `:root[data-th
 accent (a primary button) are `--on-accent`: white in light, near black in dark, where accents are pale.
 A site whose accent breaks that redefines it beside the other four.
 
+### The top bar
+
+Every page of every site wears the same bar, so walking from one page to the next never moves a button:
+
+1. **Left:** the site's mark, which opens that site's front page (on the portfolio, the portfolio).
+2. **Right, in this order**, each only if the site has it: **Docs · Gallery · Statistics · Feedback ·
+   Portfolio**, then the **theme switch**, always last.
+3. **A site shows the same links on all its pages**: the front page, the statistics page and the wiki. The page
+   the reader is on stays in the bar, marked `class="on"` (`aria-current="page"` on the wiki), and is never
+   left out. Every link points at the same place from every page: Gallery from the statistics page is
+   `../#gallery`.
+4. **Portfolio** is on every page but the portfolio's own, whose bar is its sections: **Projects · Contact**.
+5. **On a phone** (640px and under) the bar drops the links marked `class="roomy"`, and those are always
+   **Gallery** and **Feedback**: the reader can scroll to the first and reaches the second from the wiki. Docs,
+   Statistics and Portfolio never drop. The wiki has no room at all on a phone, so its links move into the
+   contents.
+
+Today's bars:
+
+| Site | Bar |
+|---|---|
+| Portfolio | Projects · Contact · theme |
+| Particles+ | Docs · Gallery · Statistics · Feedback · Portfolio · theme |
+| Izomap | Docs · Gallery · Portfolio · theme |
+| MetroCrafter | Portfolio · theme |
+
+A front or statistics page writes its bar as `<header><a class="home">…</a><nav>…links…<button id="theme">`. The
+wiki draws its own from `site.links` (and opens the front page from `site.front`), see the top of `wiki.js`. A new
+link takes its place in the order above and is added to every page of its site in the same change.
+
 A wiki with pages of its own (Particles+'s script reference, say) registers them:
 
 ```js
