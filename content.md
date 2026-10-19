@@ -53,7 +53,7 @@ name: Particles+
 link: ParticlesPlus/
 status: Available
 color: #e08a3c
-image: ParticlesPlus/gallery/angel-wings.gif
+image: ParticlesPlus/gallery/angel-wings.png
 caption: Angel wings, one of the effects that ships with it, drawn on a player.
 fact: What it is | A particle effects plugin with a web editor
 fact: Runs on | Spigot, Paper and Folia, Minecraft 1.16 to 26
