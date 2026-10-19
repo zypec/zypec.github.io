@@ -2,36 +2,36 @@
    own palette and type, so moving from one to the other is moving between rooms of one house. A site
    recolors it the same way it recolors the wiki, by redefining the --accent* tokens. */
 :root{
-  --bg:#ffffff; --side:#faf9f7; --panel:#ffffff; --sunk:#f4f2ef; --hover:#f1eeea;
-  --ink:#1c1a18; --ink-2:#4b4641; --muted:#857d75; --line:#ebe7e2; --line-2:#e0dbd4;
-  --accent:#b0602a; --accent-ink:#9a5222; --accent-soft:#b0602a12; --accent-line:#b0602a40;
+  --bg:#f7f5fa; --side:#f1edf6; --panel:#ffffff; --sunk:#efeaf5; --hover:#ebe5f2;
+  --ink:#1d1626; --ink-2:#4a405a; --muted:#776c88; --line:#e6e0ee; --line-2:#d9d1e4;
+  --accent:#b0602a; --accent-ink:#9a5222; --accent-soft:#b0602a12; --accent-line:#b0602a40; --on-accent:#fff;
   --req:#b3352f; --gap:#8a5a12;
-  --code:#2a2622; --code-bg:#f7f5f2; --code-a:#2d6f6a;
-  --stage:#191715; --stage-2:#24211e;
-  --shadow:0 1px 2px #1c1a180a, 0 8px 24px #1c1a180d;
+  --code:#2a2622; --code-bg:#f4f0f8; --code-a:#2d6f6a;
+  --stage:#120c1a; --stage-2:#1d1527;
+  --shadow:none;
   --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-  --r:12px; --r-sm:8px;
+  --r:10px; --r-sm:7px;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme=light]){
-    --bg:#121110; --side:#161514; --panel:#1a1918; --sunk:#201e1c; --hover:#23211f;
-    --ink:#efebe6; --ink-2:#c7c0b8; --muted:#8f877e; --line:#262422; --line-2:#302d2a;
-    --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45;
+    --bg:#0b0711; --side:#100a17; --panel:#160f1f; --sunk:#130d1b; --hover:#1f162b;
+    --ink:#ece6f6; --ink-2:#c9bfd8; --muted:#8f84a1; --line:#241a32; --line-2:#33274a;
+    --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45; --on-accent:#140d06;
     --req:#ec8a83; --gap:#ddb06a;
-    --code:#e6e0d9; --code-bg:#1b1a18; --code-a:#7cc3b8;
-    --stage:#0d0c0b; --stage-2:#1a1816;
-    --shadow:0 1px 2px #0006, 0 8px 24px #0005;
+    --code:#e6e0d9; --code-bg:#100a17; --code-a:#7cc3b8;
+    --stage:#07050b; --stage-2:#140e1d;
+    --shadow:none;
   }
 }
 :root[data-theme=dark]{
-  --bg:#121110; --side:#161514; --panel:#1a1918; --sunk:#201e1c; --hover:#23211f;
-  --ink:#efebe6; --ink-2:#c7c0b8; --muted:#8f877e; --line:#262422; --line-2:#302d2a;
-  --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45;
+  --bg:#0b0711; --side:#100a17; --panel:#160f1f; --sunk:#130d1b; --hover:#1f162b;
+  --ink:#ece6f6; --ink-2:#c9bfd8; --muted:#8f84a1; --line:#241a32; --line-2:#33274a;
+  --accent:#e39a5f; --accent-ink:#eaa772; --accent-soft:#e39a5f17; --accent-line:#e39a5f45; --on-accent:#140d06;
   --req:#ec8a83; --gap:#ddb06a;
-  --code:#e6e0d9; --code-bg:#1b1a18; --code-a:#7cc3b8;
-  --stage:#0d0c0b; --stage-2:#1a1816;
-  --shadow:0 1px 2px #0006, 0 8px 24px #0005;
+  --code:#e6e0d9; --code-bg:#100a17; --code-a:#7cc3b8;
+  --stage:#07050b; --stage-2:#140e1d;
+  --shadow:none;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65;
@@ -64,7 +64,7 @@ footer a{color:var(--ink-2)}
 .btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;font-weight:600;
   font-size:15px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink)}
 .btn:hover{text-decoration:none;border-color:var(--accent-line)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .btn.primary:hover{background:var(--accent-ink)}
 .btn.soon{cursor:default;color:var(--muted);background:var(--sunk);border-style:dashed}
 
