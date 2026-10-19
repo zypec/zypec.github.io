@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MetroCrafter</title>
+<meta name="description" content="İstanbul's Metrobüs, the M2 metro and Marmaray, rebuilt in Minecraft and run by the people who ride them. In development.">
+<meta property="og:title" content="MetroCrafter">
+<meta property="og:description" content="İstanbul's public transport, rebuilt in Minecraft and run by its players. In development.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath fill='%236ea0ff' d='M3 2h10v9H3z'/%3E%3Cpath fill='%23cfe0ff' d='M4 3h8v3H4z'/%3E%3Cpath fill='%231f4fa3' d='M3 11h10v1H3zM4 8h2v2H4zM10 8h2v2h-2zM2 13h2v1H2zM12 13h2v1h-2zM1 14h14v1H1z'/%3E%3C/svg%3E">
+<script>
+try {
+  const theme = localStorage.getItem('zypec-theme') || localStorage.getItem('pp-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+} catch (unavailable) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@800;900&family=Doto:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../kit/front.css">
+<style>
+/* MetroCrafter, in İstanbul's transit signage: a departure board lists the lines, and what the server is
+   about runs down the page as the stations of a line, each name on a station's sign, the last stretch
+   dashed because it is still being built. The bar along the top is the kit's, as on every other page.
+   Everything it says is in content.md beside it. */
+
+/* ── Settings: the values worth changing by hand. ── */
+:root{
+  /* The name is a logo, in a highway-sign face, as Particles+'s is in pixels; the board is dot matrix, being a
+     board. Everything else is in the kit's own type, as on every other page. */
+  --font-logo:Overpass,"Helvetica Neue",Arial,sans-serif;
+  --font-board:Doto,ui-monospace,monospace;
+  --size-title:clamp(44px,4.8vw,66px);
+  --size-station:28px;
+  --led:#ffb21e; --led-dim:#ffb21e33; --board:#060408;
+  /* MetroCrafter's blue, from its own web panel; the line down the page is drawn in it. */
+  --accent:#1f4fa3; --accent-ink:#1a438c; --accent-soft:#1f4fa312; --accent-line:#1f4fa340;
+  --sign:#1d1626; --sign-ink:#fff; --sign-2:#bdb3cc;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --accent:#6ea0ff; --accent-ink:#8cb4ff; --accent-soft:#6ea0ff17; --accent-line:#6ea0ff45; --sign:#1c1428}}
+:root[data-theme=dark]{--accent:#6ea0ff; --accent-ink:#8cb4ff; --accent-soft:#6ea0ff17; --accent-line:#6ea0ff45; --sign:#1c1428}
+
+.badge{display:inline-grid;place-items:center;min-width:40px;height:32px;padding:0 8px;border-radius:5px;background:var(--c);
+  color:#fff;font:900 16px/1 var(--body);flex:none}
+
+header .home svg{width:16px;height:16px}
+header .home{font-family:var(--font-logo);font-weight:800;letter-spacing:0}
+
+/* The board takes the wider half, so every line's route fits on its row. */
+.hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:44px;align-items:center;padding:64px 0 16px}
+.hero .kicker{margin:0 0 16px;font:600 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.hero h1{margin:0;font:900 var(--size-title)/.9 var(--font-logo);letter-spacing:-.035em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{font-size:19px;line-height:1.6;color:var(--ink-2);margin:22px 0 0}
+.hero .works{display:inline-flex;margin-top:24px;padding:7px 10px 5px;border-radius:5px;
+  background:repeating-linear-gradient(-45deg,#ffcf33 0 12px,#111 12px 24px)}
+.hero .works span{background:#ffcf33;color:#111;font:700 14px/1 var(--body);padding:4px 9px;border-radius:3px}
+
+/* The departure board: amber dots on black. */
+.board{background:var(--board);border-radius:8px;padding:18px 20px 14px;color:var(--led);font-family:var(--font-board);
+  box-shadow:inset 0 0 0 2px #241c2c,0 0 0 6px var(--sign);text-shadow:0 0 6px #ff9d0066}
+.board .top{font-size:18px;font-weight:900;letter-spacing:.06em;border-bottom:2px dotted var(--led-dim);padding-bottom:10px}
+.board .row{display:grid;grid-template-columns:44px minmax(0,auto) minmax(0,1fr);gap:4px 14px;align-items:center;padding:10px 0;
+  border-bottom:2px dotted var(--led-dim)}
+.board .row .badge{text-shadow:none;width:44px;min-width:0;height:26px;font-size:13.5px}
+.board .row b{font-size:23px;font-weight:900;white-space:nowrap}
+.board .row em{font-style:normal;font-size:16px;text-align:right;white-space:nowrap}
+.board .ticker{overflow:hidden;white-space:nowrap;font-size:18px;padding-top:12px}
+.board .ticker span{display:inline-block;padding-left:100%;animation:run 24s linear infinite}
+@keyframes run{to{transform:translateX(-100%)}}
+
+main>section>h2{font:700 30px/1.15 var(--body);letter-spacing:-.015em;margin:72px 0 28px}
+
+/* The line down the page, a station on it for each thing the server is about. */
+.station{position:relative;padding:0 0 52px 64px}
+.station::before{content:"";position:absolute;left:21px;top:0;bottom:0;width:10px;background:var(--accent)}
+h2+.station::before{top:18px;border-radius:5px 5px 0 0}
+.station::after{content:"";position:absolute;left:14px;top:8px;width:24px;height:24px;border-radius:50%;background:var(--bg);
+  border:6px solid var(--accent);box-sizing:border-box}
+/* An interchange is drawn as a capsule, as on the maps. */
+.station.change::after{height:42px;border-radius:12px;border-color:var(--ink)}
+.plate{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;max-width:100%;background:var(--sign);color:var(--sign-ink);
+  border-radius:6px;padding:8px 18px 8px 12px;margin:0 0 14px}
+.plate h3{margin:0;font:700 var(--size-station)/1.2 var(--body);letter-spacing:-.01em}
+.plate small{font:600 12px/1 var(--mono);color:var(--sign-2);text-transform:uppercase;letter-spacing:.1em}
+.station p{max-width:60ch;margin:0 0 10px;color:var(--ink-2)}
+/* The stretch still being built: dashed, the way maps draw a line under construction. */
+.extension{position:relative;padding:4px 0 24px 64px}
+.extension::before{content:"";position:absolute;left:21px;top:0;bottom:0;width:10px;
+  background:repeating-linear-gradient(var(--accent) 0 14px,transparent 14px 24px)}
+.extension h3{font:700 24px/1.2 var(--body);margin:0 0 8px;color:var(--muted)}
+.extension p{max-width:60ch;color:var(--muted);margin:0}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:32px;padding-top:40px}
+  .hero h1{font-size:clamp(44px,13vw,76px)}
+  .board .row{grid-template-columns:40px minmax(0,1fr)}
+  .board .row em{grid-column:2;text-align:left;font-size:15px;white-space:normal}
+  .station,.extension{padding-left:46px}
+  .station::before,.extension::before{left:12px;width:8px}
+  .station::after{left:6px;width:20px;height:20px;border-width:5px}
+  .station.change::after{height:36px}
+  .plate h3{font-size:22px}
+}
+.content-error{color:var(--muted);padding:48px 0}
+@media (prefers-reduced-motion:reduce){.board .ticker{white-space:normal}.board .ticker span{animation:none;padding-left:0}}
+</style>
+</head>
+<body>
+<header>
+  <a class="home" href="./"><svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="#6ea0ff" d="M3 2h10v9H3z"/><path fill="#cfe0ff" d="M4 3h8v3H4z"/><path fill="#1f4fa3" d="M3 11h10v1H3zM4 8h2v2H4zM10 8h2v2h-2zM2 13h2v1H2zM12 13h2v1h-2zM1 14h14v1H1z"/></svg>MetroCrafter</a>
+  <nav>
+    <a href="../">Portfolio</a>
+    <button id="theme" type="button" aria-live="polite"><span class="icon" aria-hidden="true"></span><span class="text"></span></button>
+  </nav>
+</header>
+
+<!-- What this page says is in content.md beside it; this file only draws it. -->
+<main data-content="content.md"></main>
+
+<footer>
+  <span>MetroCrafter by Emre Kaya</span>
+  <a href="../">Portfolio</a>
+  <a href="../ParticlesPlus/">Particles+</a>
+  <a href="../izomap/">Izomap</a>
+</footer>
+
+<script src="../kit/content.js"></script>
+<script>
+const {escape, inline} = Content;
+
+Content.kind('hero', (block, _, blocks) => {
+  const board = blocks.find(one => one.kind === 'board');
+  return `<section class="hero"><div><p class="kicker">${inline(block.one('kicker'))}</p><h1>${inline(block.one('title'))}</h1>`
+    + `${block.html}${block.one('badge') ? `<div class="works"><span>${inline(block.one('badge'))}</span></div>` : ''}</div>`
+    + (board ? boardOf(board) : '') + '</section>';
+});
+
+/** The board stands beside the hero, so the hero draws it; where it is written in the file does not matter. */
+function boardOf(block) {
+  return `<div class="board" aria-label="${escape(block.one('title'))}"><div class="top">${inline(block.one('title').toUpperCase())}</div>`
+    + block.pairs('row').map(([badge, name, detail, color]) =>
+      `<div class="row"><span class="badge" style="--c:${escape(color || 'var(--accent)')}">${inline(badge)}</span>`
+      + `<b>${inline(name)}</b><em>${inline(detail || '')}</em></div>`).join('')
+    + (block.one('ticker') ? `<div class="ticker"><span>${inline(block.one('ticker'))}</span></div>` : '') + '</div>';
+}
+Content.kind('board', () => '');
+
+Content.kind('station', block => `<div class="station${/^(yes|true)$/i.test(block.one('change')) ? ' change' : ''}">`
+  + `<div class="plate">${block.one('badge') ? `<span class="badge" style="--c:${escape(block.one('color') || 'var(--accent)')}">${inline(block.one('badge'))}</span>` : ''}`
+  + `<h3>${inline(block.one('name'))}</h3>${block.one('label') ? `<small>${inline(block.one('label'))}</small>` : ''}</div>`
+  + `${block.html}</div>`);
+
+Content.kind('extension', block => `<div class="extension"><h3>${inline(block.one('name'))}</h3>${block.html}</div>`);
+</script>
+<script src="../kit/theme.js"></script>
+</body>
+</html>
