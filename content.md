@@ -13,7 +13,7 @@
   be given more than once, and a | splits it in parts. The kinds this page knows:
 
   title      name, role, fact: Label | Value (any number), link: Words | address (any number; an e-mail
-             address as mailto:… gets the envelope)
+             address as mailto:… gets the envelope, a LinkedIn or GitHub address their marks)
   about      the opening words, under "About me" (label: gives it another)
   project    name, link, status, color, brand (particles-plus, izomap or metrocrafter: the name drawn with its
              own mark and typeface), image (a picture, or an .mp4 that plays like one), poster (a film's still),
