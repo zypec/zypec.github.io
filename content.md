@@ -39,9 +39,10 @@ link: GitHub | https://github.com/zypec
 ::: about
 I have a deep interest in software, one that began when I learned Java in middle school, and I have
 [open-source projects written in Java](https://github.com/zypec) on GitHub. I graduated with High Honors
-from the Statistics department at Mimar Sinan Fine Arts University, and I plan to shape my career by
+from the Statistics department at Mimar Sinan Fine Arts University 🦉, and I plan to shape my career by
 blending my interest in software with statistics. By bringing what I know of statistics together with my
-software skills, I aim to specialize in data analysis and, above all, artificial intelligence.^[I also drink a lot of coffee, and brew most of it myself. I call it a hobby; the sample size suggests otherwise.]
+software skills, I aim to specialize in data analysis and, above all, artificial
+intelligence.^[I also drink a lot of coffee, and brew most of it myself. I call it a hobby; the sample size suggests otherwise.]
 :::
 
 ## My Projects {#projects}
@@ -56,7 +57,7 @@ color: #e08a3c
 image: ParticlesPlus/gallery/angel-wings.png
 caption: Angel wings, one of the effects that ships with it, drawn on a player.
 fact: What it is | A particle effects plugin with a web editor
-fact: Runs on | Spigot, Paper and Folia, Minecraft 1.16 to 26
+fact: Runs on | Spigot, Paper and Folia, Minecraft 1.16 to 26.3
 fact: Built with | Java, and a browser editor that previews every effect
 
 Fully customizable particle effects: wings, rituals, trails, 3D models from Blockbench and whole little
@@ -69,7 +70,8 @@ link: izomap/
 status: Coming soon
 color: #cf9c06
 image: izomap/gallery/fog.png
-caption: A cathedral and a town at dusk, the land behind fading into the sky, photographed in game and printed onto maps.
+caption: A cathedral and a town at dusk, the land behind fading into the sky, photographed in game and printed onto
+maps.
 fact: What it is | Isometric photography printed onto maps
 fact: Runs on | Paper 26.3
 fact: License | Free and open source
@@ -84,9 +86,9 @@ link: metrocrafter/
 status: In development
 color: #1f4fa3
 line: Metrobüs | #e2231a
-line: M2 metro | #00a650
+line: M2 Metro | #00a650
 line: Marmaray | #1c5aa8
-caption: The three lines it runs. It has no pictures yet; it is still being built.
+caption: The three lines it runs currently. It has no pictures yet; it is still being built.
 fact: What it is | A Minecraft server of its own
 fact: Runs on | Its own server, built from the ground up
 
@@ -114,5 +116,5 @@ The easiest way to reach me is by e-mail.
 - GitHub: [github.com/zypec](https://github.com/zypec)
 
 ::: colophon
-Set in Newsreader and IBM Plex Mono. Every word on this page comes from one text file.
+yes, this is another vibecoded Claude website 👉👈
 :::
