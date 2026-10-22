@@ -15,8 +15,10 @@
   title      name, role, fact: Label | Value (any number), link: Words | address (any number; an e-mail
              address as mailto:… gets the envelope)
   about      the opening words, under "About me" (label: gives it another)
-  project    name, link, status, color, image, caption, fact: Label | Value, line: Name | color (drawn when
-             there is no image), open: the words of its button; then what it is
+  project    name, link, status, color, brand (particles-plus, izomap or metrocrafter: the name drawn with its
+             own mark and typeface), image (a picture, or an .mp4 that plays like one), poster (a film's still),
+             caption, fact: Label | Value, line: Name | color (drawn when there is no image), open: the words of
+             its button; then what it is
   projects   a table of the projects of one group: group, caption, columns: the facts it shows by their labels,
              empty: said while the group has none (projects then need group:)
   colophon   the small print at the bottom
@@ -54,8 +56,10 @@ name: Particles+
 link: ParticlesPlus/
 status: Available
 color: #e08a3c
-image: ParticlesPlus/gallery/angel-wings.png
-caption: Angel wings, one of the effects that ships with it, drawn on a player.
+brand: particles-plus
+image: ParticlesPlus/gallery/sigil.mp4
+poster: ParticlesPlus/gallery/sigil.jpg
+caption: The sigil of the arcane circle, one of the effects that ships with it, drawn from the plugin's own particles.
 fact: What it is | A particle effects plugin with a web editor
 fact: Runs on | Spigot, Paper and Folia, Minecraft 1.16 to 26.3
 fact: Built with | Java, and a browser editor that previews every effect
@@ -69,6 +73,7 @@ name: Izomap
 link: izomap/
 status: Coming soon
 color: #cf9c06
+brand: izomap
 image: izomap/gallery/fog.png
 caption: A cathedral and a town at dusk, the land behind fading into the sky, photographed in game and printed onto
 maps.
@@ -85,15 +90,21 @@ name: MetroCrafter
 link: metrocrafter/
 status: In development
 color: #1f4fa3
+brand: metrocrafter
 line: Metrobüs | #e2231a
 line: M2 Metro | #00a650
 line: Marmaray | #1c5aa8
 caption: The three lines it runs currently. It has no pictures yet; it is still being built.
-fact: What it is | A Minecraft server of its own
+fact: What it is | A Minecraft server of its own: a city run by its players
+fact: Inside it | Jobs, citizens and NPCs, candidates and elections, the one who leads the city
 fact: Runs on | Its own server, built from the ground up
 
-İstanbul's Metrobüs, the M2 metro and Marmaray, rebuilt in Minecraft and run by the people who ride them.
-Not a plugin but a whole server, where a city's daily commute becomes the game.
+A whole city in Minecraft, with İstanbul's Metrobüs, the M2 metro and Marmaray running through it. Its
+citizens live alongside NPCs, and everyone has a part: drivers, cleaners, the chiefs who keep a line on time.
+Players stand as candidates, the city votes, and the one it elects leads it.
+
+That is only the tip of the iceberg. MetroCrafter is not a plugin added to a server but a server of its own,
+built from the ground up.
 :::
 
 ### Statistics and data

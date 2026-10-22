@@ -75,8 +75,8 @@ header .ver{color:var(--muted);font-family:var(--mono);font-size:12px;padding:2p
 #themed:hover,#navtoggle:hover{border-color:var(--muted);color:var(--ink)}
 /* The same links as the bar of the site's other pages, looked the same. */
 header .links{display:flex;gap:4px;align-items:center}
-header .links a{border:0;color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px;white-space:nowrap}
-header .links a:hover,header .links a.on{background:var(--hover);color:var(--ink)}
+header .links a{border:0;color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px;line-height:24px;white-space:nowrap}
+header .links a:hover{background:var(--hover);color:var(--ink)}
 nav .navlinks{display:none}
 #themeicon{font-size:14px;line-height:1}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}

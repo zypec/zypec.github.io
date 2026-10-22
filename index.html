@@ -16,7 +16,7 @@ try {
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&family=Pixelify+Sans:wght@600;700&family=Overpass:wght@900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="kit/front.css">
 <style>
 /* Preprint: a statistician's portfolio set the way a good paper is. An opening, numbered sections, notes
@@ -98,12 +98,27 @@ td.empty{color:var(--muted);font-weight:400;white-space:normal;font-style:italic
 .project:first-of-type{border-top:0}
 .project h3{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font:500 26px/1.2 var(--font-serif);margin:0 0 16px}
 .project h3 .key{width:12px;height:12px;background:var(--c);flex:none}
-.project h3 a{color:inherit}
+.project h3 a{color:inherit;display:flex;align-items:center;gap:12px}
+.project h3 a:hover{text-decoration:none}
+/* A project's name as its own site writes it: its mark, its typeface, its colors. */
+.project h3 .logo{width:22px;height:22px;flex:none;display:block}
+.wordmark{line-height:1;font-size:32px}
+.wordmark.particles-plus{font-family:"Pixelify Sans",ui-monospace,monospace;font-weight:700;text-shadow:2px 2px 0 #00000026}
+.wordmark.particles-plus .plus{margin-left:.02em;font-weight:600;background:linear-gradient(135deg,#e08a3c,#a9551f);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.wordmark.izomap{font-family:var(--body);font-weight:700;letter-spacing:-.045em;color:var(--ink);
+  background:linear-gradient(transparent 60%,#e3b12a 60% 90%,transparent 90%)}
+.wordmark.metrocrafter{font-family:Overpass,"Helvetica Neue",Arial,sans-serif;font-weight:900;letter-spacing:-.035em;line-height:.9}
+.wordmark.metrocrafter em{font-style:normal;color:#1f4fa3}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .wordmark.particles-plus .plus{background-image:linear-gradient(135deg,#ffd27a,#e0975c)}
+  :root:not([data-theme=light]) .wordmark.metrocrafter em{color:#6ea0ff}}
+:root[data-theme=dark] .wordmark.particles-plus .plus{background-image:linear-gradient(135deg,#ffd27a,#e0975c)}
+:root[data-theme=dark] .wordmark.metrocrafter em{color:#6ea0ff}
 .status{font:500 11px/1 var(--font-label);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
   border:1px solid var(--line-2);padding:5px 7px}
 .project figure{margin:0 0 18px;counter-increment:figure}
 .project figure .frame{background:var(--stage);border:1px solid var(--line);aspect-ratio:16/9;overflow:hidden}
-.project figure img{display:block;width:100%;height:100%;object-fit:cover}
+.project figure img,.project figure video{display:block;width:100%;height:100%;object-fit:cover}
 .project figcaption{font-size:13.5px;line-height:1.5;color:var(--muted);margin-top:8px}
 .project figcaption::before{content:"Figure " counter(figure) ". ";font:500 12px/1 var(--font-label);color:var(--ink)}
 /* A project with no pictures yet draws what it is: here, the lines it runs. */
@@ -186,14 +201,31 @@ Content.kind('projects', (block, _, blocks) => {
     + '</table></div></div>';
 });
 
+/** Each project's mark and name as its own site draws them, by the brand: a project names. */
+const BRANDS = {
+  'particles-plus': '<svg class="logo" viewBox="0 0 7 7" shape-rendering="crispEdges" aria-hidden="true"><path fill="#b0602a" d="M3 0h1v2H3zM3 5h1v2H3zM0 3h2v1H0zM5 3h2v1H5zM2 2h3v3H2z"/><path fill="#f1c79d" d="M3 3h1v1H3z"/></svg>'
+    + '<span class="wordmark particles-plus">Particles<span class="plus">+</span></span>',
+  izomap: '<svg class="logo" viewBox="0 0 16 16" aria-hidden="true"><path fill="#ecbd2c" d="M8 1 14.5 4.5 8 8 1.5 4.5z"/><path fill="#cf9c06" d="M1.5 4.5 8 8v7L1.5 11.5z"/><path fill="#7d5c00" d="M14.5 4.5 8 8v7l6.5-3.5z"/></svg>'
+    + '<span class="wordmark izomap">Izomap</span>',
+  metrocrafter: '<svg class="logo" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="#6ea0ff" d="M3 2h10v9H3z"/><path fill="#cfe0ff" d="M4 3h8v3H4z"/><path fill="#1f4fa3" d="M3 11h10v1H3zM4 8h2v2H4zM10 8h2v2h-2zM2 13h2v1H2zM12 13h2v1h-2zM1 14h14v1H1z"/></svg>'
+    + '<span class="wordmark metrocrafter">Metro<em>Crafter</em></span>',
+};
+
+/** A film plays like a picture that moves: on its own, silent, round and round. */
+const shown = (src, alt, poster) => /\.(mp4|webm)$/i.test(src)
+  ? `<video src="${escape(src)}"${poster ? ` poster="${escape(poster)}"` : ''} autoplay muted loop playsinline aria-label="${escape(alt)}"></video>`
+  : `<img src="${escape(src)}" alt="${escape(alt)}" loading="lazy">`;
+
 Content.kind('project', block => {
   const name = inline(block.one('name')), link = escape(block.one('link'));
+  const brand = BRANDS[block.one('brand')];
   const picture = block.one('image')
-    ? `<img src="${escape(block.one('image'))}" alt="${escape(block.one('caption'))}" loading="lazy">`
+    ? shown(block.one('image'), block.one('caption'), block.one('poster'))
     : `<div class="lines">${block.pairs('line').map(([line, color]) => `<span>${inline(line)}<i style="--l:${escape(color)}"></i></span>`).join('')}</div>`;
   const facts = block.pairs('fact').map(([label, value]) => `<dt>${inline(label)}</dt><dd>${inline(value)}</dd>`).join('');
   return `<article class="project" style="--c:${escape(block.one('color') || 'var(--accent)')}">`
-    + `<h3><span class="key"></span><a href="${link}">${name}</a>${block.one('status') ? `<span class="status">${inline(block.one('status'))}</span>` : ''}</h3>`
+    + `<h3>${brand ? `<a href="${link}" aria-label="${escape(block.one('name'))}">${brand}</a>` : `<span class="key"></span><a href="${link}">${name}</a>`}`
+    + `${block.one('status') ? `<span class="status">${inline(block.one('status'))}</span>` : ''}</h3>`
     + `<figure><div class="frame">${picture}</div>${block.one('caption') ? `<figcaption>${inline(block.one('caption'))}</figcaption>` : ''}</figure>`
     + `<div class="body">${block.html}</div>${facts ? `<dl>${facts}</dl>` : ''}`
     + `<a class="button open" href="${link}">${inline(block.one('open') || 'Open ' + block.one('name'))} →</a></article>`;

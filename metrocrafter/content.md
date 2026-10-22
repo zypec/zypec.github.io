@@ -20,8 +20,9 @@ kicker: A Minecraft server · In development
 title: Metro*Crafter*
 badge: Being built, one station at a time
 
-İstanbul's Metrobüs, the M2 metro and Marmaray, rebuilt in Minecraft and run by the people who ride them.
-Not a plugin added to a server, but a whole server of its own, where a city's daily commute becomes the game.
+A whole city in Minecraft, with İstanbul's Metrobüs, the M2 metro and Marmaray running through it, and run by
+the people who live in it: they work its jobs, share its streets with NPCs, and choose who leads it. Not a
+plugin added to a server, but a whole server of its own.
 :::
 
 ::: board
@@ -54,15 +55,33 @@ name: Keep the city moving
 label: Work
 change: yes
 
-Drivers, guards, cleaners, the chiefs who keep a line on time: everyone has a job, and the city notices
-when it's done well.
+Drivers, cleaners, the chiefs who keep a line on time: everyone has a job, and the city notices when it's
+done well.
 :::
 
 ::: station
-name: Have a say
-label: Vote
+name: Live in it
+label: Citizens
 
-The city chooses who runs it, and what they decide changes the ride for everyone.
+Players are its citizens, and they are not alone: NPCs crowd the platforms, ride the trains and go about a
+day of their own.
+:::
+
+::: station
+name: Run for office
+label: Vote
+change: yes
+
+Stand as a candidate, win the city's vote and lead it. What the one in charge decides changes the ride for
+everyone.
+:::
+
+::: station
+name: And far more
+label: Below the surface
+
+Jobs, citizens, elections: that is only the tip of the iceberg. The rest is being built, and it will be
+told when the first passengers board.
 :::
 
 ::: extension

@@ -49,10 +49,15 @@ header .home{display:flex;align-items:center;gap:10px;font-weight:650;color:var(
 header .home:hover{text-decoration:none}
 header .home svg{width:16px;height:16px}
 header nav{display:flex;gap:4px;margin-left:auto;align-items:center}
-header nav a{color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px}
-header nav a:hover,header nav a.on{background:var(--hover);color:var(--ink);text-decoration:none}
-#theme{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--panel);
-  color:var(--ink-2);border-radius:999px;height:34px;min-width:34px;padding:0 12px;font:inherit;font-size:13.5px;cursor:pointer}
+header nav a{color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px;line-height:24px}
+/* The page the reader is on is not drawn apart: the wiki's feedback and bug pages are pages of the docs,
+   and a bar that marked Docs there said the wrong thing. */
+header nav a:hover{background:var(--hover);color:var(--ink);text-decoration:none}
+/* The same size as the wiki's theme button and as far from the last link, so walking from a front page to
+   its wiki never moves a button in the bar. */
+#theme{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--panel);
+  color:var(--ink-2);border-radius:999px;height:38px;min-width:38px;padding:0 14px;margin-left:16px;font:inherit;font-size:13.5px;
+  cursor:pointer;transition:border-color .15s,color .15s}
 #theme:hover{border-color:var(--muted);color:var(--ink)}
 #theme .icon{font-size:14px;line-height:1}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
@@ -68,6 +73,17 @@ footer a{color:var(--ink-2)}
 .btn.primary:hover{background:var(--accent-ink)}
 .btn.soon{cursor:default;color:var(--muted);background:var(--sunk);border-style:dashed}
 
+/* A picture opened over the page by lightbox.js. */
+dialog.lightbox{border:0;padding:0;background:transparent;max-width:min(96vw,1600px);max-height:94vh;overflow:visible;color:#eee}
+dialog.lightbox:focus{outline:none}
+dialog.lightbox::backdrop{background:#000d}
+dialog.lightbox img{display:block;max-width:100%;max-height:84vh;margin:0 auto;border-radius:var(--r)}
+dialog.lightbox .bar{display:flex;align-items:center;gap:10px;margin-top:12px}
+dialog.lightbox p{flex:1;margin:0 2px;font-size:14px;color:#e8e8ee}
+dialog.lightbox button{height:38px;min-width:38px;padding:0 12px;border:1px solid #ffffff38;border-radius:999px;background:#ffffff14;
+  color:#fff;font:inherit;font-size:15px;cursor:pointer}
+dialog.lightbox button:hover{background:#ffffff2e}
+
 .lede{font-size:19px;line-height:1.55;color:var(--ink-2);max-width:60ch;margin:0 0 22px}
 h1.title{font-size:40px;letter-spacing:-.025em;line-height:1.1;margin:44px 0 12px}
 h2{font-size:22px;letter-spacing:-.015em;margin:44px 0 6px}
@@ -81,6 +97,7 @@ h3{font-size:15px;margin:0 0 10px}
   /* The links a phone drops, always the same ones (see the README's top bar): never Docs or Portfolio. */
   header nav a.roomy{display:none}
   #theme .text{display:none}
+  #theme{margin-left:4px}
   main{padding:0 16px 64px}
   footer{padding:24px 16px}
   h1.title{font-size:32px}
