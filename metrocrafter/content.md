@@ -26,9 +26,9 @@ Not a plugin added to a server, but a whole server of its own, where a city's da
 
 ::: board
 title: Lines
-row: MB | Metrobüs | Beylikdüzü – Söğütlüçeşme | #e2231a
-row: M2 | M2 metro | Yenikapı – Hacıosman | #00a650
-row: MR | Marmaray | Halkalı – Gebze | #1c5aa8
+row: 34G | Metrobüs | Beylikdüzü – Söğütlüçeşme | #e2231a
+row: M2 | M2 Metro | Yenikapı – Hacıosman | #00a650
+row: B1 | Marmaray | Halkalı – Gebze | #65656a
 ticker: Not yet boarding. Mind the gap between the platform and the train.
 :::
 
