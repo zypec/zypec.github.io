@@ -75,8 +75,7 @@ status: Coming soon
 color: #cf9c06
 brand: izomap
 image: izomap/gallery/fog.png
-caption: A cathedral and a town at dusk, the land behind fading into the sky, photographed in game and printed onto
-maps.
+caption: A cathedral and a town at dusk, the land behind fading into the sky, photographed in game and printed onto maps.
 fact: What it is | Isometric photography printed onto maps
 fact: Runs on | Paper 26.3
 fact: License | Free and open source
