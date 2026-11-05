@@ -43,4 +43,9 @@ jobs:
           GH_TOKEN: ${{ secrets.KIT_DISPATCH_TOKEN }}
         run: |
           if [ -z "$GH_TOKEN" ]; then echo "No KIT_DISPATCH_TOKEN; ${{ matrix.repository }} rebuilds on its next push."; exit 0; fi
-          gh api "repos/${{ matrix.repository }}/dispatches" -f event_type=kit-changed
+          if gh api "repos/${{ matrix.repository }}/dispatches" -f event_type=kit-changed 2> said; then exit 0; fi
+          cat said
+          if grep -q "HTTP 401" said; then
+            echo "::error::KIT_DISPATCH_TOKEN was refused: it has expired or was revoked. Make a new fine-grained token (Contents: read and write on zypec/ParticlesPlus and zypec/izomap) and save it as the secret again. Until then ${{ matrix.repository }} rebuilds on its next push."
+          fi
+          exit 1
