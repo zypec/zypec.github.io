@@ -10,6 +10,7 @@ copies it into its site, so a site never depends on another being up.
 | `wiki.css` | The shell's styles |
 | `front.css`, `theme.js` | Front pages, statistics pages and this portfolio |
 | `content.js` | A page's words from a text file: `<main data-content="content.md">` is drawn from Markdown with `::: kind` blocks, whose drawing the page teaches it. Its header documents the format |
+| `island.js` | The bar as an island: it morphs from the size the last page left it to its own, brings in only what is new in it, and draws in when the page is scrolled. Loaded right after `</header>` on every page, front pages and the wiki alike |
 | `lightbox.js` | A gallery's pictures opened over the page, with previous, next and close, the arrow keys and Escape: `Lightbox.wire('.gallery a')`. Its styles are in `front.css` |
 
 A site recolors the kit by redefining the accent tokens after `wiki.css` or `front.css`:
@@ -30,7 +31,8 @@ Every page of every site wears the same bar, so walking from one page to the nex
 2. **Right, in this order**, each only if the site has it: **Docs · Gallery · Statistics · Feedback ·
    Portfolio**, then the **theme switch**, always last.
 3. **A site shows the same links on all its pages**: the front page, the statistics page and the wiki. The page
-   the reader is on stays in the bar and is never left out. It may carry `class="on"` (`aria-current="page"` on
+   the reader is on stays in the bar and is never left out, except in the wiki, where Docs gives way to
+   **Home**, the project's front page, and the wiki's name in the bar opens the wiki's own home. It may carry `class="on"` (`aria-current="page"` on
    the wiki), but it is drawn like every other link: the wiki's feedback and bug pages are pages of the docs,
    and a bar that marked Docs there said the wrong thing. Every link points at the same place from every page: Gallery from the statistics page is
    `../#gallery`.

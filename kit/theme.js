@@ -49,7 +49,10 @@
     const box = button.getBoundingClientRect();
     const x = box.left + box.width / 2, y = box.top + box.height / 2;
     const far = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    document.startViewTransition(() => apply(next)).ready.then(() => root.animate(
+    root.classList.add('theming');
+    const turning = document.startViewTransition(() => apply(next));
+    turning.finished.finally(() => root.classList.remove('theming'));
+    turning.ready.then(() => root.animate(
       {clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${far}px at ${x}px ${y}px)`]},
       {duration: 600, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)'})).catch(() => {});
   }

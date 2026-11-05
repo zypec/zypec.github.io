@@ -62,6 +62,11 @@ const Wiki = (() => {
    * The site's top bar links, the same ones and in the same order as on its front page, so walking
    * from one page of a site to the next never moves a button.
    */
+  /**
+   * The site's links as the wiki's bar shows them: the wiki's own (Docs) is where the reader is, so in
+   * its place the bar offers the way back to the project's front page.
+   */
+  const homeLinks = links => links.map(link => link.on && SITE.front ? {href: SITE.front, label: 'Home'} : link);
   const barLinks = links => links.map(link => `<a href="${esc(link.href)}"`
     + (String(link.href).startsWith('#') ? ` data-t="${esc(link.href.slice(1))}"` : '')
     + `${link.on ? ' class="on" aria-current="page"' : link.roomy ? ' class="roomy"' : ''}>${esc(link.label)}</a>`).join('');
@@ -119,7 +124,7 @@ const Wiki = (() => {
     }
 
     nav.innerHTML = (html || '<div class="empty">No match.</div>')
-      + (SITE.links.length ? `<div class="navlinks">${barLinks(SITE.links.filter(link => !link.on))}</div>` : '')
+      + (SITE.links.length ? `<div class="navlinks">${barLinks(homeLinks(SITE.links))}</div>` : '')
       + (SITE.foot ? `<div class="navfoot">${SITE.foot}</div>` : '');
     nav.querySelectorAll('a[data-t]').forEach(a => a.onclick = e => { e.preventDefault(); go(a.dataset.t); });
   }
@@ -452,7 +457,10 @@ const Wiki = (() => {
     const box = from.getBoundingClientRect();
     const x = box.left + box.width / 2, y = box.top + box.height / 2;
     const far = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    document.startViewTransition(() => applyTheme(next)).ready.then(() => root.animate(
+    root.classList.add('theming');
+    const turning = document.startViewTransition(() => applyTheme(next));
+    turning.finished.finally(() => root.classList.remove('theming'));
+    turning.ready.then(() => root.animate(
       {clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${far}px at ${x}px ${y}px)`]},
       {duration: 600, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)'})).catch(() => {});
   }
@@ -517,12 +525,12 @@ const Wiki = (() => {
       go(decodeURIComponent(anchor.getAttribute('href').slice(1)));
     });
     const brand = document.getElementById('brand');
-    brand.onclick = () => SITE.front ? location.assign(SITE.front) : go(HOME);
-    if (SITE.front) brand.title = 'Front page';
+    brand.onclick = () => go(HOME);
+    brand.title = 'The wiki\'s home';
     if (SITE.links.length) {
       const bar = document.createElement('span');
       bar.className = 'links';
-      bar.innerHTML = barLinks(SITE.links);
+      bar.innerHTML = barLinks(homeLinks(SITE.links));
       // A link to one of the wiki's own pages is walked like the contents are.
       bar.querySelectorAll('a[data-t]').forEach(a => a.onclick = e => { e.preventDefault(); go(a.dataset.t); });
       document.getElementById('themed').before(bar);
