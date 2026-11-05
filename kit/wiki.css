@@ -115,9 +115,14 @@ nav .navlinks{display:none}
 
 /* contents down the side ------------------------------------------------ */
 .wrap{display:flex;align-items:flex-start}
-nav{flex:0 0 288px;width:288px;background:var(--side);border-right:1px solid var(--line);padding:24px 14px 80px;
-  position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto;scrollbar-width:thin;margin-top:12px;
-  border-top:1px solid var(--line);border-radius:0 var(--r) 0 0}
+/* The contents float beside the page as a pane of the same glass as the island above it, held off
+   the window's edges, rather than a slab down the side: one under a floating island read as two
+   designs laid over each other. */
+nav{flex:0 0 280px;width:280px;padding:18px 12px 40px;position:sticky;top:84px;height:calc(100vh - 96px);margin:16px 0 12px 12px;
+  overflow-y:auto;scrollbar-width:thin;border-radius:20px;isolation:isolate;background:var(--glass);
+  backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);-webkit-backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);
+  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px color-mix(in srgb,var(--glass-rim) 40%,transparent),var(--glass-shadow)}
+html.theming nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--panel)}
 nav .empty{padding:16px 12px;font-size:14px}
 nav .grp{font-size:12px;color:var(--muted);margin:22px 12px 4px;font-weight:600;letter-spacing:.02em}
 nav .grp:first-child{margin-top:0}
@@ -296,8 +301,8 @@ button.tag.var:hover{color:var(--accent-ink);background:transparent;text-decorat
   .wrap{flex-direction:column}
   /* A drawer under the bar rather than the top of the page: opened from halfway down a page it is
      where the reader is looking, and a search's results show the moment anything is typed. */
-  nav{display:none;position:fixed;top:var(--head,108px);left:0;right:0;bottom:0;width:auto;height:auto;z-index:9;
-    border-right:0;border-top:1px solid var(--line);padding:12px 10px 40px;box-shadow:0 12px 24px #0006}
+  nav{display:none;position:fixed;top:var(--head,108px);left:8px;right:8px;bottom:8px;width:auto;height:auto;z-index:9;margin:0;
+    padding:12px 10px 40px;border-radius:22px;background:color-mix(in srgb,var(--panel) 90%,transparent)}
   nav.open{display:block}
   body.navopen{overflow:hidden}
   main{padding:28px 16px 96px;width:100%}
