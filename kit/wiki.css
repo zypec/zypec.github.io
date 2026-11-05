@@ -39,7 +39,7 @@
   --shadow:none;
 }
 *{box-sizing:border-box}
-html{scroll-padding-top:88px}
+html{scroll-padding-top:96px}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
   font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 code,pre,kbd,.k,dd{font-family:var(--mono)}
@@ -50,26 +50,54 @@ a:hover{border-bottom-color:currentColor}
 [hidden]{display:none!important}
 
 /* the bar along the top ------------------------------------------------- */
-header{position:sticky;top:0;z-index:10;height:64px;display:flex;gap:20px;align-items:center;
-  padding:0 28px;background:color-mix(in srgb,var(--bg) 86%,transparent);
-  backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);
-  border-bottom:1px solid var(--line)}
+/* An island of liquid glass floating over the page rather than a strip across it: a capsule as wide
+   as what it holds, the page showing through it blurred and brightened, lit along its top edge and
+   catching a highlight at its upper left the way a pane of curved glass does. Moving to another page
+   it grows or shrinks from the size it had into the new page's (island.js, the same between the
+   front page, the statistics and the wiki), the name of the page in it changes in place, and
+   scrolled down it draws in a little. With reduced motion every one of those is a cut. */
+:root{--glass:color-mix(in srgb,var(--panel) 62%,transparent);--glass-rim:#ffffffb3;--glass-glow:#ffffff8c;
+  --glass-shadow:0 18px 40px -18px #2a124a59,0 3px 10px -2px #2a124a1f;--spring:cubic-bezier(.2,.9,.2,1.12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glass:color-mix(in srgb,#2a2038 52%,transparent);
+  --glass-rim:#ffffff38;--glass-glow:#ffffff1f;--glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}}
+:root[data-theme=dark]{--glass:color-mix(in srgb,#2a2038 52%,transparent);--glass-rim:#ffffff38;--glass-glow:#ffffff1f;
+  --glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}
+header{position:sticky;top:12px;z-index:10;height:56px;width:fit-content;max-width:calc(100% - 32px);margin:12px auto 0;
+  display:flex;gap:14px;align-items:center;padding:0 9px 0 22px;border-radius:999px;isolation:isolate;
+  background:var(--glass);backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);
+  -webkit-backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);
+  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px color-mix(in srgb,var(--glass-rim) 40%,transparent),
+    inset 0 -10px 18px -14px var(--glass-glow),var(--glass-shadow);
+  transition:height .5s var(--spring),padding .5s var(--spring),top .5s var(--spring),
+    box-shadow .3s,background-color .3s}
+header::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:radial-gradient(90% 160% at 12% -60%,var(--glass-glow),transparent 55%),
+    linear-gradient(180deg,color-mix(in srgb,var(--glass-glow) 55%,transparent),transparent 42%)}
+html.scrolled header{top:8px;height:50px}
+/* While it changes size the island holds its contents at their own width and lets the capsule
+   reveal them, the way the phone's island opens over what it shows. */
+header.morphing{overflow:hidden}
+header.morphing>*{flex-shrink:0}
+/* The page the reader is on, said inside the island and changed in place when another opens. */
+header .now{max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);font-size:14px;
+  font-weight:500;padding-left:14px;border-left:1px solid var(--line-2)}
+header .now:empty{display:none}
 header h1{margin:0;font-size:16px;font-weight:650;display:flex;align-items:center;gap:10px;white-space:nowrap;
   letter-spacing:-.01em;cursor:pointer}
 header h1 svg{width:16px;height:16px;display:block}
 header h1 small{font-size:16px;font-weight:400;color:var(--muted)}
 header .ver{color:var(--muted);font-family:var(--mono);font-size:12px;padding:2px 8px;border-radius:999px;
   background:var(--sunk)}
-.search{position:relative;flex:1;max-width:560px;margin:0 auto}
+.search{position:relative;flex:0 1 360px;width:360px;min-width:0}
 #q{width:100%;height:40px;padding:0 44px 0 40px;border:1px solid var(--line-2);border-radius:999px;
-  background:var(--panel);color:var(--ink);font:inherit;font-size:14.5px;transition:border-color .15s,box-shadow .15s}
+  background:color-mix(in srgb,var(--panel) 70%,transparent);color:var(--ink);font:inherit;font-size:14.5px;transition:border-color .15s,box-shadow .15s}
 #q:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
 #q::placeholder{color:var(--muted)}
 .search svg{position:absolute;left:14px;top:50%;width:16px;height:16px;transform:translateY(-50%);color:var(--muted);
   pointer-events:none}
 .search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11.5px;color:var(--muted);
   border:1px solid var(--line-2);border-radius:6px;padding:0 6px;line-height:20px;background:var(--side)}
-#themed,#navtoggle{height:38px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink-2);border-radius:999px;
+#themed,#navtoggle{height:38px;border:1px solid var(--line-2);background:color-mix(in srgb,var(--panel) 70%,transparent);color:var(--ink-2);border-radius:999px;
   padding:0 14px;cursor:pointer;font:inherit;font-size:13.5px;display:inline-flex;gap:8px;align-items:center;
   transition:border-color .15s,color .15s}
 #themed:hover,#navtoggle:hover{border-color:var(--muted);color:var(--ink)}
@@ -85,7 +113,8 @@ nav .navlinks{display:none}
 /* contents down the side ------------------------------------------------ */
 .wrap{display:flex;align-items:flex-start}
 nav{flex:0 0 288px;width:288px;background:var(--side);border-right:1px solid var(--line);padding:24px 14px 80px;
-  position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;scrollbar-width:thin}
+  position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto;scrollbar-width:thin;margin-top:12px;
+  border-top:1px solid var(--line);border-radius:0 var(--r) 0 0}
 nav .empty{padding:16px 12px;font-size:14px}
 nav .grp{font-size:12px;color:var(--muted);margin:22px 12px 4px;font-weight:600;letter-spacing:.02em}
 nav .grp:first-child{margin-top:0}
@@ -250,7 +279,10 @@ button.tag.var:hover{color:var(--accent-ink);background:transparent;text-decorat
 @media (max-width:1100px){main{padding:36px 36px 120px}}
 /* On a phone the contents are a button, not the first screen and a half of every page. */
 @media (max-width:860px){
-  header{height:auto;flex-wrap:wrap;gap:12px;padding:12px 16px}
+  header{height:auto;width:auto;max-width:none;margin:8px 8px 0;top:8px;flex-wrap:wrap;gap:10px;padding:10px 10px 10px 18px;
+    border-radius:26px}
+  html.scrolled header{height:auto;top:6px}
+  header .now{display:none}
   .search{order:5;flex-basis:100%;max-width:none;margin:0}
   .search kbd{display:none}
   #navtoggle{display:inline-flex;margin-left:auto}

@@ -42,20 +42,41 @@ a:hover{text-decoration:underline}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 [hidden]{display:none!important}
 
-header{position:sticky;top:0;z-index:10;height:64px;display:flex;gap:18px;align-items:center;padding:0 28px;
-  background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:saturate(1.4) blur(12px);
-  -webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+/* The bar is an island of liquid glass floating over the page, the same as the wiki's (see wiki.css,
+   which says why), so the two morph into each other between pages. */
+:root{--glass:color-mix(in srgb,var(--panel) 62%,transparent);--glass-rim:#ffffffb3;--glass-glow:#ffffff8c;
+  --glass-shadow:0 18px 40px -18px #2a124a59,0 3px 10px -2px #2a124a1f;--spring:cubic-bezier(.2,.9,.2,1.12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glass:color-mix(in srgb,#2a2038 52%,transparent);
+  --glass-rim:#ffffff38;--glass-glow:#ffffff1f;--glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}}
+:root[data-theme=dark]{--glass:color-mix(in srgb,#2a2038 52%,transparent);--glass-rim:#ffffff38;--glass-glow:#ffffff1f;
+  --glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}
+header{position:sticky;top:12px;z-index:10;height:56px;width:fit-content;max-width:calc(100% - 32px);margin:12px auto 0;
+  display:flex;gap:18px;align-items:center;padding:0 9px 0 22px;border-radius:999px;isolation:isolate;
+  background:var(--glass);backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);
+  -webkit-backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);
+  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px color-mix(in srgb,var(--glass-rim) 40%,transparent),
+    inset 0 -10px 18px -14px var(--glass-glow),var(--glass-shadow);
+  transition:height .5s var(--spring),padding .5s var(--spring),top .5s var(--spring),
+    box-shadow .3s,background-color .3s}
+header::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:radial-gradient(90% 160% at 12% -60%,var(--glass-glow),transparent 55%),
+    linear-gradient(180deg,color-mix(in srgb,var(--glass-glow) 55%,transparent),transparent 42%)}
+html.scrolled header{top:8px;height:50px}
+/* While it changes size the island holds its contents at their own width and lets the capsule
+   reveal them, the way the phone's island opens over what it shows. */
+header.morphing{overflow:hidden}
+header.morphing>*{flex-shrink:0}
 header .home{display:flex;align-items:center;gap:10px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
 header .home:hover{text-decoration:none}
 header .home svg{width:16px;height:16px}
-header nav{display:flex;gap:4px;margin-left:auto;align-items:center}
+header nav{display:flex;gap:4px;align-items:center}
 header nav a{color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px;line-height:24px}
 /* The page the reader is on is not drawn apart: the wiki's feedback and bug pages are pages of the docs,
    and a bar that marked Docs there said the wrong thing. */
 header nav a:hover{background:var(--hover);color:var(--ink);text-decoration:none}
 /* The same size as the wiki's theme button and as far from the last link, so walking from a front page to
    its wiki never moves a button in the bar. */
-#theme{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--panel);
+#theme{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:color-mix(in srgb,var(--panel) 70%,transparent);
   color:var(--ink-2);border-radius:999px;height:38px;min-width:38px;padding:0 14px;margin-left:16px;font:inherit;font-size:13.5px;
   cursor:pointer;transition:border-color .15s,color .15s}
 #theme:hover{border-color:var(--muted);color:var(--ink)}
@@ -92,7 +113,7 @@ h3{font-size:15px;margin:0 0 10px}
 .notice{border:1px dashed var(--line-2);background:var(--sunk);border-radius:var(--r);padding:20px 22px;color:var(--ink-2)}
 
 @media (max-width:640px){
-  header{padding:0 16px;gap:8px}
+  header{padding:0 8px 0 16px;gap:8px;max-width:calc(100% - 16px);margin-top:8px;top:8px}
   header nav a{padding:6px 8px;font-size:13.5px}
   /* The links a phone drops, always the same ones (see the README's top bar): never Docs or Portfolio. */
   header nav a.roomy{display:none}

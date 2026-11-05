@@ -132,8 +132,27 @@ const Wiki = (() => {
     current = id;
     closeNav();
     if (hashed() !== id) history.pushState(null, '', '#' + encodeURIComponent(id).replace(/%2F/g, '/'));
-    render();
-    window.scrollTo({top: 0});
+    island(() => {
+      render();
+      window.scrollTo({top: 0});
+    });
+  }
+
+  /**
+   * A change of page with the island at the top growing or shrinking to the name of the new page
+   * instead of jumping to it (island.js). A page built without island.js just changes.
+   */
+  function island(change) {
+    if (typeof Island === 'undefined') return change();
+    Island.around(change);
+  }
+
+  /** The name of the page on screen, written into the island beside the site's name. */
+  function sayNow() {
+    const now = document.getElementById('now');
+    if (!now) return;
+    const title = current === HOME ? null : main.querySelector('h2');
+    now.textContent = title ? title.textContent.trim() : '';
   }
 
   const hashed = () => location.hash ? decodeURIComponent(location.hash.slice(1)) : null;
@@ -342,6 +361,11 @@ const Wiki = (() => {
   }
 
   function render() {
+    draw();
+    sayNow();
+  }
+
+  function draw() {
     renderNav();
     for (const extension of extensions) if (extension.leave) extension.leave();
 
@@ -354,7 +378,7 @@ const Wiki = (() => {
     if (guide && String(guide.group || '').startsWith('@')) {
       current = guide.group.slice(1);
       history.replaceState(null, '', '#' + encodeURIComponent(current));
-      return render();
+      return draw();
     }
 
     for (const extension of extensions) if (extension.render && extension.render(current)) return;
@@ -368,7 +392,7 @@ const Wiki = (() => {
   const phone = matchMedia('(max-width:860px)');
 
   function openNav(open) {
-    document.documentElement.style.setProperty('--head', document.querySelector('header').offsetHeight + 'px');
+    document.documentElement.style.setProperty('--head', Math.ceil(document.querySelector('header').getBoundingClientRect().bottom + 8) + 'px');
     nav.classList.toggle('open', open);
     document.body.classList.toggle('navopen', open && phone.matches);
     navToggle.setAttribute('aria-expanded', String(open));
@@ -482,7 +506,7 @@ const Wiki = (() => {
     });
     addEventListener('popstate', () => {
       current = hashed() || HOME;
-      render();
+      island(render);
     });
     // A link written into a guide is an ordinary anchor; it is walked like the contents are, so it
     // lands at the top of the page it names and the back button returns from it.
