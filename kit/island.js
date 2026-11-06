@@ -101,5 +101,19 @@ const Island = (() => {
   addEventListener('scroll', scrolled, {passive: true});
   scrolled();
 
+  // Links too many for a narrow island scroll inside it; the fade at the end says there are more,
+  // and goes once the last of them is in view.
+  const links = document.querySelector('header nav');
+  const overflows = () => {
+    if (!links) return;
+    links.classList.toggle('overflows', links.scrollWidth - links.clientWidth - links.scrollLeft > 2);
+  };
+  if (links) {
+    links.addEventListener('scroll', overflows, {passive: true});
+    addEventListener('resize', overflows);
+    addEventListener('load', overflows);
+    overflows();
+  }
+
   return {measure, morph, around};
 })();

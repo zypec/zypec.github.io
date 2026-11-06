@@ -72,7 +72,14 @@ header.morphing>*{flex-shrink:0}
 header .home{display:flex;align-items:center;gap:10px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
 header .home:hover{text-decoration:none}
 header .home svg{width:16px;height:16px}
-header nav{display:flex;gap:4px;align-items:center}
+/* On a screen too narrow for every link the links scroll inside the island rather than pushing the
+   theme button out past its end. The button is the last thing in the links and holds the right edge
+   while they slide under it, with a shade on its left while more are hidden there. */
+header nav{display:flex;gap:4px;align-items:center;min-width:0;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
+header nav::-webkit-scrollbar{display:none}
+header>:not(nav),header nav>*{flex-shrink:0}
+header nav #theme{position:sticky;right:0;z-index:1}
+header nav.overflows #theme{background:var(--panel);box-shadow:-12px 0 12px -2px color-mix(in srgb,var(--panel) 85%,transparent)}
 header nav a{color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px;line-height:24px}
 /* The page the reader is on is not drawn apart: the wiki's feedback and bug pages are pages of the docs,
    and a bar that marked Docs there said the wrong thing. */
