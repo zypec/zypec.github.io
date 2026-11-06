@@ -214,10 +214,10 @@ const Wiki = (() => {
 
   function family(lang) {
     if (FAMILY[lang]) return FAMILY[lang];
-    const words = (lang === 'kotlin' ? JAVA_WORDS + ' ' + KOTLIN_WORDS : JAVA_WORDS).split(' ');
+    const words = (lang === 'kotlin' ? JAVA_WORDS + ' ' + KOTLIN_WORDS : lang === 'groovy' ? JAVA_WORDS + ' def' : JAVA_WORDS).split(' ');
     return FAMILY[lang] = new RegExp([
       /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/,                                  // a comment
-      /("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')/,                         // a string or a character
+      /("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')/,                        // a string, single-quoted in Groovy and a character in Java
       /(@[A-Za-z_][\w.]*)/,                                              // an annotation
       new RegExp('\\b(' + words.join('|') + ')\\b'),                       // the language's own words
       /(\b\d[\d_]*(?:\.\d+)?[fFdDlL]?\b)/,                                  // a number
@@ -227,16 +227,63 @@ const Wiki = (() => {
   }
   const FAMILY_CLASSES = ['c-com', 'c-str', 'c-ann', 'c-key', 'c-num', 'c-jty', 'c-fn'];
 
+  /** XML as a build file is written: comments, the tags, their attributes and the values given them. */
+  const XML = new RegExp([
+    /(<!--[\s\S]*?-->)/,
+    /(<\/?[A-Za-z][\w:.\-]*|\/?>)/,
+    /("[^"]*")/,
+    /([\w:\-]+(?==))/
+  ].map(part => part.source).join('|'), 'g');
+  const XML_CLASSES = ['c-com', 'c-key', 'c-str', 'c-jty'];
+
   function highlightIn(lang, code) {
-    if (lang !== 'java' && lang !== 'kotlin') return highlight(code);
+    const xml = lang === 'xml';
+    if (!xml && lang !== 'java' && lang !== 'kotlin' && lang !== 'groovy') return highlight(code);
+    const classes = xml ? XML_CLASSES : FAMILY_CLASSES;
     let out = '', last = 0;
-    for (const match of code.matchAll(family(lang))) {
+    for (const match of code.matchAll(xml ? XML : family(lang))) {
       const index = match.findIndex((group, i) => i > 0 && group !== undefined);
       if (index < 1) continue;
-      out += esc(code.slice(last, match.index)) + `<span class="${FAMILY_CLASSES[index - 1]}">${esc(match[0])}</span>`;
+      out += esc(code.slice(last, match.index)) + `<span class="${classes[index - 1]}">${esc(match[0])}</span>`;
       last = match.index + match[0].length;
     }
     return out + esc(code.slice(last));
+  }
+
+  /**
+   * The same code written several ways, Maven and Gradle, Java and Kotlin, shown one at a time under
+   * a row of tabs. A group's choice is kept in the browser and shared by every block of the group,
+   * so a reader who picks Kotlin once reads Kotlin in every example.
+   */
+  function codeTabs() {
+    main.querySelectorAll('.codetabs').forEach(box => {
+      if (box.querySelector(':scope > .codebar')) return;
+      const figures = [...box.querySelectorAll(':scope > figure.file')];
+      if (figures.length < 2) return;
+      const group = box.dataset.group || 'code';
+      const label = figure => (figure.querySelector('pre') || {}).dataset?.tab || figure.querySelector('figcaption').firstChild.textContent;
+      const bar = document.createElement('div');
+      bar.className = 'codebar';
+      bar.setAttribute('role', 'tablist');
+      bar.innerHTML = figures.map(figure => `<button type="button" role="tab" data-tab="${esc(label(figure))}"`
+        + `${figure.dataset.icon ? ` data-icon="${esc(figure.dataset.icon)}"` : ''}>${esc(label(figure))}</button>`).join('');
+      box.prepend(bar);
+      bar.querySelectorAll('button').forEach(button => button.onclick = () => {
+        try { localStorage.setItem('zypec-code-' + group, button.dataset.tab); } catch (blocked) {}
+        main.querySelectorAll(`.codetabs[data-group="${CSS.escape(group)}"]`).forEach(other => showTab(other, button.dataset.tab));
+      });
+      let kept = null;
+      try { kept = localStorage.getItem('zypec-code-' + group); } catch (blocked) {}
+      showTab(box, kept);
+    });
+  }
+
+  function showTab(box, tab) {
+    const buttons = [...box.querySelectorAll(':scope > .codebar button')];
+    const chosen = buttons.findIndex(button => button.dataset.tab === tab);
+    const at = chosen < 0 ? 0 : chosen;
+    buttons.forEach((button, index) => button.setAttribute('aria-selected', String(index === at)));
+    box.querySelectorAll(':scope > figure.file').forEach((figure, index) => { figure.hidden = index !== at; });
   }
 
   const COPY_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5V3.8a1.3 1.3 0 0 0-1.3-1.3H3.8a1.3 1.3 0 0 0-1.3 1.3v5.4a1.3 1.3 0 0 0 1.3 1.3h1.7"/></svg>';
@@ -284,6 +331,7 @@ const Wiki = (() => {
       block.replaceWith(figure);
       figure.appendChild(block);
     });
+    codeTabs();
   }
 
   // --- the sheet --------------------------------------------------------------------------------
