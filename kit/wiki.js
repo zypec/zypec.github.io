@@ -203,6 +203,65 @@ const Wiki = (() => {
     return out + esc(code.slice(last));
   }
 
+  /**
+   * Java and Kotlin read as what they are rather than as a configuration file: comments, strings,
+   * annotations, the language's own words, types by their capital, calls by the bracket after them.
+   * A block says its language with data-lang on the figure it stands in.
+   */
+  const JAVA_WORDS = 'abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public record return sealed permits short static super switch synchronized this throw throws transient try var void volatile while yield true false null';
+  const KOTLIN_WORDS = 'val var fun object companion data when is in as by override open internal lateinit init typealias';
+  const FAMILY = {};
+
+  function family(lang) {
+    if (FAMILY[lang]) return FAMILY[lang];
+    const words = (lang === 'kotlin' ? JAVA_WORDS + ' ' + KOTLIN_WORDS : JAVA_WORDS).split(' ');
+    return FAMILY[lang] = new RegExp([
+      /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/,                                  // a comment
+      /("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')/,                         // a string or a character
+      /(@[A-Za-z_][\w.]*)/,                                              // an annotation
+      new RegExp('\\b(' + words.join('|') + ')\\b'),                       // the language's own words
+      /(\b\d[\d_]*(?:\.\d+)?[fFdDlL]?\b)/,                                  // a number
+      /(\b[A-Z][A-Za-z0-9_]*\b)/,                                         // a type
+      /(\b[a-z_][\w]*(?=\s*\())/                                          // a call
+    ].map(part => part.source).join('|'), 'g');
+  }
+  const FAMILY_CLASSES = ['c-com', 'c-str', 'c-ann', 'c-key', 'c-num', 'c-jty', 'c-fn'];
+
+  function highlightIn(lang, code) {
+    if (lang !== 'java' && lang !== 'kotlin') return highlight(code);
+    let out = '', last = 0;
+    for (const match of code.matchAll(family(lang))) {
+      const index = match.findIndex((group, i) => i > 0 && group !== undefined);
+      if (index < 1) continue;
+      out += esc(code.slice(last, match.index)) + `<span class="${FAMILY_CLASSES[index - 1]}">${esc(match[0])}</span>`;
+      last = match.index + match[0].length;
+    }
+    return out + esc(code.slice(last));
+  }
+
+  const COPY_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5V3.8a1.3 1.3 0 0 0-1.3-1.3H3.8a1.3 1.3 0 0 0-1.3 1.3v5.4a1.3 1.3 0 0 0 1.3 1.3h1.7"/></svg>';
+  const COPIED_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7"/></svg>';
+
+  /** A copy button in the top right of a block that says which file it is from. */
+  function copyButton(figure, block) {
+    const caption = figure.querySelector('figcaption');
+    if (!caption || caption.querySelector('.copy')) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy';
+    button.setAttribute('aria-label', 'Copy the code');
+    const idle = () => { button.innerHTML = COPY_ICON + '<span>Copy</span>'; button.classList.remove('done'); };
+    idle();
+    let back = null;
+    button.onclick = () => navigator.clipboard.writeText(block.textContent).then(() => {
+      button.innerHTML = COPIED_ICON + '<span>Copied</span>';
+      button.classList.add('done');
+      clearTimeout(back);
+      back = setTimeout(idle, 1600);
+    });
+    caption.appendChild(button);
+  }
+
   const codeBlock = (text, label) =>
     `<figure class="ex"><figcaption>${esc(label || 'Example')}</figcaption><pre>${highlight(text)}</pre></figure>`;
 
@@ -214,7 +273,9 @@ const Wiki = (() => {
     main.querySelectorAll('pre').forEach(block => {
       if (block.closest('figure.ex')) return;
       if (!block.classList.contains('console')) {
-        block.innerHTML = highlight(block.textContent);
+        const figure = block.closest('figure.file');
+        block.innerHTML = highlightIn(figure ? figure.dataset.lang : null, block.textContent);
+        if (figure) copyButton(figure, block);
         return;
       }
       const figure = document.createElement('figure');
