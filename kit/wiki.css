@@ -79,8 +79,16 @@ html.scrolled header{top:8px;height:50px}
 /* While the theme turns, the page is a picture the new theme is uncovered over, and a glass that
    blurs what is behind it cannot be pictured: the island stands on its own color until it is done. */
 html.theming header{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--panel)}
-header.morphing{overflow:hidden}
+/* While the island morphs, what it holds is laid out at the size it ends at and centered in it, so it
+   is uncovered from the middle outwards on both sides as the island grows: laid from the left, the
+   theme button at the right end stayed cut off until the very end and then appeared at once. */
+header.morphing{overflow:hidden;justify-content:center}
 header.morphing>*{flex-shrink:0}
+/* An end of the island riding its edge passes over what the island is still uncovering: it is drawn
+   solid, with a shade on its inner side, so it reads as the island's end sliding over them. */
+header .riding{position:relative;z-index:2;background:var(--panel)!important;border-radius:999px}
+header .riding:last-child{box-shadow:-14px 0 12px -6px var(--panel)}
+header .riding:first-child{box-shadow:14px 0 12px -6px var(--panel)}
 /* The page the reader is on, said inside the island and changed in place when another opens. */
 header .now{max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);font-size:14px;
   font-weight:500;padding-left:14px;border-left:1px solid var(--line-2)}

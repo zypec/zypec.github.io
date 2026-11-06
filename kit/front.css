@@ -67,8 +67,16 @@ html.scrolled header{top:8px;height:50px}
 /* While the theme turns, the page is a picture the new theme is uncovered over, and a glass that
    blurs what is behind it cannot be pictured: the island stands on its own color until it is done. */
 html.theming header{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--panel)}
-header.morphing{overflow:hidden}
+/* While the island morphs, what it holds is laid out at the size it ends at and centered in it, so it
+   is uncovered from the middle outwards on both sides as the island grows: laid from the left, the
+   theme button at the right end stayed cut off until the very end and then appeared at once. */
+header.morphing{overflow:hidden;justify-content:center}
 header.morphing>*{flex-shrink:0}
+/* An end of the island riding its edge passes over what the island is still uncovering: it is drawn
+   solid, with a shade on its inner side, so it reads as the island's end sliding over them. */
+header .riding{position:relative;z-index:2;background:var(--panel)!important;border-radius:999px}
+header .riding:last-child{box-shadow:-14px 0 12px -6px var(--panel)}
+header .riding:first-child{box-shadow:14px 0 12px -6px var(--panel)}
 header .home{display:flex;align-items:center;gap:10px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
 header .home:hover{text-decoration:none}
 header .home svg{width:16px;height:16px}
@@ -91,6 +99,14 @@ header nav a:hover{background:var(--hover);color:var(--ink);text-decoration:none
   cursor:pointer;transition:border-color .15s,color .15s}
 #theme:hover{border-color:var(--muted);color:var(--ink)}
 #theme .icon{font-size:14px;line-height:1}
+/* The button says the theme before theme.js, loaded at the end of the page, writes it: empty, it was
+   narrower for the first frames and the island widened once the words came in. */
+#theme .icon:empty::after{content:"◐"}
+#theme .text:empty::after{content:"Auto"}
+:root[data-theme=light] #theme .icon:empty::after{content:"○"}
+:root[data-theme=light] #theme .text:empty::after{content:"Light"}
+:root[data-theme=dark] #theme .icon:empty::after{content:"●"}
+:root[data-theme=dark] #theme .text:empty::after{content:"Dark"}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 main{max-width:1120px;margin:0 auto;padding:0 28px 80px}
 footer{max-width:1120px;margin:0 auto;padding:28px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;

@@ -50,8 +50,19 @@ const Island = (() => {
         {duration: 420, delay: 120, easing: 'ease-out', fill: 'backwards'});
     if (Math.abs(to.width - from.width) < 1 && Math.abs(to.height - from.height) < 1) return;
     island.classList.add('morphing');
+    const timing = {duration: 600, easing: 'cubic-bezier(.2,.9,.2,1.12)'};
     const growing = island.animate([{width: from.width + 'px', height: from.height + 'px'},
-      {width: to.width + 'px', height: to.height + 'px'}], {duration: 600, easing: 'cubic-bezier(.2,.9,.2,1.12)'});
+      {width: to.width + 'px', height: to.height + 'px'}], timing);
+    // What the island holds stays where it ends while the island grows round it, from the middle;
+    // the brand and the theme button, its two ends, ride its edges instead, so neither is cut off by
+    // an edge on the way and both are where the eye expects them from the first frame.
+    const all = parts(island), half = (to.width - from.width) / 2;
+    const ends = [[all[0], half], [all[all.length - 1], -half]];
+    for (const [part, by] of ends) if (part && all.length > 1 && Math.abs(by) >= 1) {
+      part.classList.add('riding');
+      part.animate([{transform: `translateX(${by}px)`}, {transform: 'translateX(0)'}], timing)
+        .finished.finally(() => part.classList.remove('riding'));
+    }
     growing.finished.finally(() => island.classList.remove('morphing'));
   }
 
