@@ -1,8 +1,18 @@
 # zypec.github.io
 
-Emre Kaya's portfolio, live at <https://zypec.github.io/>, and the shared look every project site is built on:
-[Particles+](https://zypec.github.io/ParticlesPlus/), [Izomap](https://zypec.github.io/izomap/) and
-[MetroCrafter](https://zypec.github.io/metrocrafter/).
+My personal site, live at <https://zypec.github.io/>.
 
-The pages are plain files with their words kept in `content.md` beside them, so changing what a page says
-needs no code. Pushing to `main` publishes the site. How the shared look works is in [`kit/README.md`](kit/README.md).
+It has my portfolio and the pages of my projects:
+
+- [Particles+](https://zypec.github.io/ParticlesPlus/), a particle effects plugin for Minecraft servers
+- [Izomap](https://zypec.github.io/izomap/)
+- [MetroCrafter](https://zypec.github.io/metrocrafter/)
+
+## Layout
+
+- `index.html` and `content.md`: the portfolio. The text lives in `content.md`, so I can edit it without touching HTML.
+- `metrocrafter/`: the MetroCrafter page, set up the same way.
+- `kit/`: the theme and wiki shell shared by my project sites. See [`kit/README.md`](kit/README.md).
+- `maven/`: a Maven repository for the Particles+ API.
+
+It's plain HTML, CSS and JavaScript with no framework and no build step. Pushing to `main` publishes it.
