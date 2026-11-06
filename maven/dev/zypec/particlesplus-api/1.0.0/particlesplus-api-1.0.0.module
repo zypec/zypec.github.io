@@ -1,0 +1,80 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.zypec",
+    "module": "particlesplus-api",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.6.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 16,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "particlesplus-api-1.0.0.jar",
+          "url": "particlesplus-api-1.0.0.jar",
+          "size": 4616,
+          "sha512": "d39ebe2d10f891e530c53ee970bec05e4f8693f9e5073944dd85226c5f7bc8b4017409708708c8284e1c3dd38f6294b83bf41426ca5179ad1336c74809121946",
+          "sha256": "292614f96f299d81184bddac5c08c31569102c1b6a13149fc6cf55dfcac1bd5e",
+          "sha1": "1142cdabcdbc44026ed042524ca8768bd2b850d2",
+          "md5": "5c65c80b27f99d74578c94ccba6aed2b"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 16,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "particlesplus-api-1.0.0.jar",
+          "url": "particlesplus-api-1.0.0.jar",
+          "size": 4616,
+          "sha512": "d39ebe2d10f891e530c53ee970bec05e4f8693f9e5073944dd85226c5f7bc8b4017409708708c8284e1c3dd38f6294b83bf41426ca5179ad1336c74809121946",
+          "sha256": "292614f96f299d81184bddac5c08c31569102c1b6a13149fc6cf55dfcac1bd5e",
+          "sha1": "1142cdabcdbc44026ed042524ca8768bd2b850d2",
+          "md5": "5c65c80b27f99d74578c94ccba6aed2b"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "particlesplus-api-1.0.0-sources.jar",
+          "url": "particlesplus-api-1.0.0-sources.jar",
+          "size": 3410,
+          "sha512": "ea5a13efd0d3714fc10b89a23c73029981e573c179d84d0396e409b73bd02e9f5e31d2738bd8578938d7d3605224e57e4d380687817c61a6bdcfc8d4c1442c45",
+          "sha256": "7bcff3b9680fc78def54042ac8c9697a2f87c168c4ddb9fec42f20e023f88317",
+          "sha1": "53dd073c1e08440482867d2fe271aa1a5312a946",
+          "md5": "9f6627ffd327b5ef112b3c97e3ccaf8c"
+        }
+      ]
+    }
+  ]
+}
