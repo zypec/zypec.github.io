@@ -52,6 +52,33 @@ header .home{font-family:var(--font-logo);font-weight:800;letter-spacing:0}
 .hero .kicker{margin:0 0 16px;font:600 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
 .hero h1{margin:0;font:900 var(--size-title)/.9 var(--font-logo);letter-spacing:-.035em}
 .hero h1 em{font-style:normal;color:var(--accent)}
+/* The name arrives as a train does: a car runs in along the line drawn under it, the letters showing
+   behind it as it passes, slows into the end of the word, waits and leaves; the line stays, with its
+   stations put on it as on the map down the page, the interchange where Metro meets Crafter. */
+.hero h1.logo{position:relative;width:fit-content;padding-bottom:.42em}
+.logo .word{display:inline-block;clip-path:inset(-.2em 100% -.2em 0);animation:reveal 1.25s cubic-bezier(.25,.1,.2,1) .25s both}
+.logo .track{position:absolute;left:0;right:0;bottom:.08em;height:.3em;pointer-events:none}
+.logo .rail{position:absolute;left:0;right:0;top:50%;height:.12em;margin-top:-.06em;border-radius:.06em;background:var(--accent);
+  transform-origin:left center;transform:scaleX(0);animation:rail 1.25s cubic-bezier(.25,.1,.2,1) .25s both}
+.logo .car{position:absolute;left:0;top:50%;width:1.25em;height:.3em;margin-top:-.15em;border-radius:.08em .15em .15em .08em;
+  background:linear-gradient(90deg,transparent 0 6%,#ffffffd9 6% 20%,transparent 20% 26%,#ffffffd9 26% 40%,transparent 40% 46%,
+  #ffffffd9 46% 60%,transparent 60% 66%,#ffffffd9 66% 78%,transparent 78%) center/100% 34% no-repeat,var(--accent);
+  box-shadow:0 0 0 .025em var(--bg),0 .05em .14em #0005;opacity:0;animation:car 2.3s linear .25s both}
+.logo .stop{position:absolute;top:50%;width:.3em;height:.3em;margin:-.15em 0 0 -.15em;border-radius:50%;background:var(--bg);
+  border:.07em solid var(--accent);box-sizing:border-box;transform:scale(0);animation:stop .5s cubic-bezier(.34,1.7,.5,1) both}
+.logo .stop.first{left:.15em;animation-delay:2.25s}
+.logo .stop.change{left:var(--junction,52%);width:.3em;height:.48em;margin-top:-.24em;border-radius:.15em;border-color:var(--ink);animation-delay:2.4s}
+.logo .stop.last{left:calc(100% - .15em);animation-delay:2.55s}
+@keyframes reveal{to{clip-path:inset(-.2em -.1em -.2em 0)}}
+@keyframes rail{to{transform:scaleX(1)}}
+@keyframes car{
+  0%{transform:translateX(-1.4em);opacity:0;animation-timing-function:cubic-bezier(.25,.1,.2,1)}
+  6%{opacity:1}
+  54%{transform:translateX(calc(var(--span,8em) - 1.25em));opacity:1;animation-timing-function:linear}
+  72%{transform:translateX(calc(var(--span,8em) - 1.25em));opacity:1;animation-timing-function:cubic-bezier(.5,0,.9,.6)}
+  100%{transform:translateX(calc(var(--span,8em) + .6em));opacity:0}}
+@keyframes stop{to{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.logo .word{clip-path:none}.logo .rail,.logo .stop{transform:none}.logo .car{display:none}}
 .hero p{font-size:19px;line-height:1.6;color:var(--ink-2);margin:22px 0 0}
 .hero .works{display:inline-flex;margin-top:24px;padding:7px 10px 5px;border-radius:5px;
   background:repeating-linear-gradient(-45deg,#ffcf33 0 12px,#111 12px 24px)}
@@ -133,7 +160,9 @@ const {escape, inline} = Content;
 
 Content.kind('hero', (block, _, blocks) => {
   const board = blocks.find(one => one.kind === 'board');
-  return `<section class="hero"><div><p class="kicker">${inline(block.one('kicker'))}</p><h1>${inline(block.one('title'))}</h1>`
+  return `<section class="hero"><div><p class="kicker">${inline(block.one('kicker'))}</p>`
+    + `<h1 class="logo"><span class="word">${inline(block.one('title'))}</span><span class="track" aria-hidden="true">`
+    + `<i class="rail"></i><i class="car"></i><i class="stop first"></i><i class="stop change"></i><i class="stop last"></i></span></h1>`
     + `${block.html}${block.one('badge') ? `<div class="works"><span>${inline(block.one('badge'))}</span></div>` : ''}</div>`
     + (board ? boardOf(board) : '') + '</section>';
 });
@@ -147,6 +176,19 @@ function boardOf(block) {
     + (block.one('ticker') ? `<div class="ticker"><span>${inline(block.one('ticker'))}</span></div>` : '') + '</div>';
 }
 Content.kind('board', () => '');
+
+/**
+ * Where the logo's interchange stands, under the start of the part in blue, and how far its car runs:
+ * both measured once the name is on the page in its own face.
+ */
+(function placeLogo(tries = 0) {
+  const logo = document.querySelector('.hero h1.logo'), blue = logo && logo.querySelector('em');
+  if (!logo) return tries < 100 && setTimeout(() => placeLogo(tries + 1), 30);
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+    logo.style.setProperty('--span', logo.querySelector('.word').offsetWidth + 'px');
+    if (blue) logo.style.setProperty('--junction', blue.offsetLeft + 'px');
+  });
+})();
 
 Content.kind('station', block => `<div class="station${/^(yes|true)$/i.test(block.one('change')) ? ' change' : ''}">`
   + `<div class="plate">${block.one('badge') ? `<span class="badge" style="--c:${escape(block.one('color') || 'var(--accent)')}">${inline(block.one('badge'))}</span>` : ''}`
