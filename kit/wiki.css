@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500..700&display=swap");
 /*
  * The wiki shell shared by every zypec project site: the bar, the contents, guides, reference rows,
  * the front page and the way on. A site recolors it by redefining the --accent* tokens, see
@@ -16,6 +17,10 @@
   --shadow:none;
   --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  /* The headings a page is read under, in the portfolio's serif, so every site reads as one house.
+     The small titles of cards, tiles and buttons stay in the body face: a serif that small reads as a
+     quote rather than a title. */
+  --display:Newsreader,Georgia,"Times New Roman",serif;
   --r:10px; --r-sm:7px;
 }
 @media (prefers-color-scheme:dark){
@@ -56,23 +61,23 @@ a:hover{border-bottom-color:currentColor}
    it grows or shrinks from the size it had into the new page's (island.js, the same between the
    front page, the statistics and the wiki), the name of the page in it changes in place, and
    scrolled down it draws in a little. With reduced motion every one of those is a cut. */
-:root{--glass:color-mix(in srgb,var(--panel) 62%,transparent);--glass-rim:#ffffffb3;--glass-glow:#ffffff8c;
+:root{--glass:color-mix(in srgb,var(--panel) 34%,transparent);--glass-rim:#ffffffb3;--glass-glow:#ffffff8c;
   --glass-shadow:0 18px 40px -18px #2a124a59,0 3px 10px -2px #2a124a1f;--spring:cubic-bezier(.2,.9,.2,1.12)}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glass:color-mix(in srgb,#2a2038 52%,transparent);
-  --glass-rim:#ffffff38;--glass-glow:#ffffff1f;--glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}}
-:root[data-theme=dark]{--glass:color-mix(in srgb,#2a2038 52%,transparent);--glass-rim:#ffffff38;--glass-glow:#ffffff1f;
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glass:color-mix(in srgb,#2a2038 14%,transparent);
+  --glass-rim:#ffffff5c;--glass-glow:#ffffff1f;--glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}}
+:root[data-theme=dark]{--glass:color-mix(in srgb,#2a2038 14%,transparent);--glass-rim:#ffffff5c;--glass-glow:#ffffff1f;
   --glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}
 header{position:sticky;top:12px;z-index:10;height:56px;width:fit-content;max-width:calc(100% - 32px);margin:12px auto 0;
   display:flex;gap:14px;align-items:center;padding:0 9px 0 22px;border-radius:999px;isolation:isolate;
-  background:var(--glass);backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);
-  -webkit-backdrop-filter:blur(22px) saturate(1.9) brightness(1.04);
-  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px color-mix(in srgb,var(--glass-rim) 40%,transparent),
-    inset 0 -10px 18px -14px var(--glass-glow),var(--glass-shadow);
+  background:var(--glass);backdrop-filter:blur(7px) saturate(1.8) brightness(1.1) contrast(1.04);
+  -webkit-backdrop-filter:blur(7px) saturate(1.8) brightness(1.1) contrast(1.04);
+  box-shadow:inset 1.5px 1.5px 0 -.5px var(--glass-rim),inset -1px -1px 0 -.5px color-mix(in srgb,var(--glass-rim) 45%,transparent),
+    inset 0 0 14px color-mix(in srgb,var(--glass-glow) 45%,transparent),var(--glass-shadow);
   transition:height .5s var(--spring),padding .5s var(--spring),top .5s var(--spring),
     box-shadow .3s,background-color .3s}
 header::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
-  background:radial-gradient(90% 160% at 12% -60%,var(--glass-glow),transparent 55%),
-    linear-gradient(180deg,color-mix(in srgb,var(--glass-glow) 55%,transparent),transparent 42%)}
+  background:linear-gradient(135deg,color-mix(in srgb,var(--glass-glow) 70%,transparent),transparent 32%,
+    transparent 70%,color-mix(in srgb,var(--glass-glow) 35%,transparent))}
 html.scrolled header{top:8px;height:50px}
 /* While it changes size the island holds its contents at their own width and lets the capsule
    reveal them, the way the phone's island opens over what it shows. */
@@ -150,7 +155,7 @@ nav .navfoot a{display:inline;padding:0;margin:0;font-family:var(--body);font-si
 main{flex:1;min-width:0;padding:40px 56px 120px}
 main>.page{max-width:1040px;margin:0 auto}
 .crumb{font-size:13px;color:var(--muted);margin:0 0 10px;font-weight:500}
-h2{font-size:40px;line-height:1.15;font-weight:700;margin:0 0 12px;letter-spacing:-.025em;text-wrap:balance}
+h2{font-family:var(--display);font-size:42px;line-height:1.15;font-weight:600;margin:0 0 12px;letter-spacing:-.01em;text-wrap:balance}
 .type h2{font-family:var(--mono);font-size:36px;letter-spacing:-.02em}
 .aka{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:14px;margin:0 0 18px}
 .aka code{background:var(--sunk);color:var(--code);padding:2px 8px;border-radius:6px;font-size:13px}
@@ -206,7 +211,7 @@ figure.file[data-icon=maven]{--icon-file:var(--icon-maven)}
 .codebar button[aria-selected=true]{color:var(--ink);background:var(--side);border-color:var(--line)}
 
 
-h3{font-size:22px;color:var(--ink);margin:56px 0 16px;font-weight:650;letter-spacing:-.015em}
+h3{font-family:var(--display);font-size:24px;color:var(--ink);margin:56px 0 16px;font-weight:600;letter-spacing:-.005em}
 h3 .count{font-size:14px;color:var(--muted);font-weight:400;margin-left:10px;letter-spacing:0}
 
 /* a guide ---------------------------------------------------------------- */
@@ -365,7 +370,7 @@ a.tile:hover{border-color:var(--accent-line);transform:translateY(-1px)}
 .tile .num{font-size:30px;font-weight:650;color:var(--accent-ink);letter-spacing:-.02em;line-height:1.1}
 .tile.hero{grid-column:span 4;flex-direction:row;align-items:stretch;gap:28px;padding:0}
 .hero .words{flex:1;padding:36px 36px 32px;display:flex;flex-direction:column;gap:12px;justify-content:center}
-.hero .kicker{margin:0;color:var(--accent-ink);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.hero .kicker{margin:0;color:var(--accent-ink);font-size:15px;font-weight:600}
 .hero h2{margin:0;font-size:42px;line-height:1.05;letter-spacing:-.03em}
 .hero p{margin:0;color:var(--ink-2);font-size:17px;max-width:46ch}
 .hero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
