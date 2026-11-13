@@ -49,16 +49,15 @@ a:hover{text-decoration:underline}
 
 /* The bar is an island of liquid glass floating over the page, the same as the wiki's (see wiki.css,
    which says why), so the two morph into each other between pages. */
-:root{--glass:color-mix(in srgb,var(--panel) 34%,transparent);--glass-rim:#ffffffb3;--glass-glow:#ffffff8c;
+:root{--glass:color-mix(in srgb,var(--panel) 50%,transparent);--glass-filter:blur(12px) saturate(1.6) brightness(1.06);--glass-rim:#ffffffb3;--glass-glow:#ffffff8c;
   --glass-shadow:0 18px 40px -18px #2a124a59,0 3px 10px -2px #2a124a1f;--spring:cubic-bezier(.2,.9,.2,1.12)}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glass:color-mix(in srgb,#2a2038 14%,transparent);
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glass:color-mix(in srgb,#2a2038 30%,transparent);--glass-filter:blur(12px) saturate(1.5) brightness(.72);
   --glass-rim:#ffffff5c;--glass-glow:#ffffff1f;--glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}}
-:root[data-theme=dark]{--glass:color-mix(in srgb,#2a2038 14%,transparent);--glass-rim:#ffffff5c;--glass-glow:#ffffff1f;
+:root[data-theme=dark]{--glass:color-mix(in srgb,#2a2038 30%,transparent);--glass-filter:blur(12px) saturate(1.5) brightness(.72);--glass-rim:#ffffff5c;--glass-glow:#ffffff1f;
   --glass-shadow:0 18px 44px -16px #000000b3,0 3px 10px -2px #00000066}
 header{position:sticky;top:12px;z-index:10;height:56px;width:fit-content;max-width:calc(100% - 32px);margin:12px auto 0;
   display:flex;gap:18px;align-items:center;padding:0 9px 0 22px;border-radius:999px;isolation:isolate;
-  background:var(--glass);backdrop-filter:blur(7px) saturate(1.8) brightness(1.1) contrast(1.04);
-  -webkit-backdrop-filter:blur(7px) saturate(1.8) brightness(1.1) contrast(1.04);
+  background:var(--glass);backdrop-filter:var(--glass-filter);-webkit-backdrop-filter:var(--glass-filter);
   box-shadow:inset 1.5px 1.5px 0 -.5px var(--glass-rim),inset -1px -1px 0 -.5px color-mix(in srgb,var(--glass-rim) 45%,transparent),
     inset 0 0 14px color-mix(in srgb,var(--glass-glow) 45%,transparent),var(--glass-shadow);
   transition:height .5s var(--spring),padding .5s var(--spring),top .5s var(--spring),
@@ -71,6 +70,10 @@ html.scrolled header{top:8px;height:50px}
    reveal them, the way the phone's island opens over what it shows. */
 /* While the theme turns, the page is a picture the new theme is uncovered over, and a glass that
    blurs what is behind it cannot be pictured: the island stands on its own color until it is done. */
+/* Over a bright picture the clear glass would leave light words on a light ground; dimmed behind and
+   given a soft halo of the page's own color, the words hold wherever the island floats. */
+header a,header h1,header .now,header .ver{text-shadow:0 0 10px color-mix(in srgb,var(--bg) 80%,transparent),
+  0 1px 2px color-mix(in srgb,var(--bg) 60%,transparent)}
 html.theming header{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--panel)}
 /* While the island morphs, what it holds is laid out at the size it ends at and centered in it, so it
    is uncovered from the middle outwards on both sides as the island grows: laid from the left, the
