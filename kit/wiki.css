@@ -93,10 +93,9 @@ html.theming header{backdrop-filter:none;-webkit-backdrop-filter:none;background
    theme button at the right end stayed cut off until the very end and then appeared at once. */
 header.morphing{overflow:hidden;justify-content:center}
 header.morphing>*{flex-shrink:0}
-/* An end of the island riding its edge passes over what the island is still uncovering: it is drawn
-   solid, with a shade on its inner side, so it reads as the island's end sliding over them. */
-header .riding{position:relative;z-index:2;border-radius:999px;background:var(--glass)!important;
-  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* An end of the island rides its edge in its own look; what it would pass over is kept unseen by
+   island.js until the end has gone by. */
+header .riding{z-index:2}
 /* The page the reader is on, said inside the island and changed in place when another opens. */
 header .now{max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);font-size:14px;
   font-weight:500;padding-left:14px;border-left:1px solid var(--line-2)}
@@ -126,6 +125,14 @@ header .links a{border:0;color:var(--ink-2);padding:8px 12px;border-radius:999px
 header .links a:hover{background:var(--hover);color:var(--ink)}
 nav .navlinks{display:none}
 #themeicon{font-size:14px;line-height:1}
+/* The button says the theme before wiki.js writes it, as the front pages' does, so it is its own width
+   from the first frame and the island is not widened once the words come in. */
+#themeicon:empty::after{content:"◐"}
+#themetext:empty::after{content:"Auto"}
+:root[data-theme=light] #themeicon:empty::after{content:"○"}
+:root[data-theme=light] #themetext:empty::after{content:"Light"}
+:root[data-theme=dark] #themeicon:empty::after{content:"●"}
+:root[data-theme=dark] #themetext:empty::after{content:"Dark"}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 #navtoggle{display:none}
 

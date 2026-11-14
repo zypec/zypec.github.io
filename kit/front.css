@@ -81,10 +81,12 @@ html.theming header{backdrop-filter:none;-webkit-backdrop-filter:none;background
    theme button at the right end stayed cut off until the very end and then appeared at once. */
 header.morphing{overflow:hidden;justify-content:center}
 header.morphing>*{flex-shrink:0}
-/* An end of the island riding its edge passes over what the island is still uncovering: it is drawn
-   solid, with a shade on its inner side, so it reads as the island's end sliding over them. */
-header .riding{position:relative;z-index:2;border-radius:999px;background:var(--glass)!important;
-  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* An end of the island rides its edge in its own look; what it would pass over is kept unseen by
+   island.js until the end has gone by. The links do not clip it while it rides: the theme button is one
+   of them, and riding the edge of an island shrinking round them took it outside their row, where it
+   was cut off. */
+header .riding{z-index:2}
+header.morphing nav{overflow:visible}
 header .home{display:flex;align-items:center;gap:10px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
 header .home:hover{text-decoration:none}
 header .home svg{width:16px;height:16px}
