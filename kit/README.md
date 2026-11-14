@@ -30,14 +30,14 @@ doesn't work with your accent, redefine `--on-accent` too.
 Every page uses the same bar so buttons don't move between pages.
 
 1. **Left:** the site's logo, linking to the site's front page (the portfolio links to itself).
-2. **Right, in this order**, only the ones the site has: **Docs · Gallery · Statistics · Feedback ·
+2. **Right, in this order**, only the ones the site has: **Docs, Gallery, Statistics, Feedback,
    Portfolio**, then the **theme switch**, always last.
 3. **Same links on every page of a site** (front page, statistics page, wiki), and every link points to
    the same place from every page (Gallery from the statistics page is `../#gallery`). The current page
    stays in the bar. It can have `class="on"` (`aria-current="page"` in the wiki) but looks like the other
    links. In the wiki, Docs is replaced by **Home** (the project's front page), and the wiki's name in the
    bar opens the wiki's home.
-4. **Portfolio** is on every page except the portfolio, whose bar lists its sections: **Projects · Contact**.
+4. **Portfolio** is on every page except the portfolio, whose bar lists its sections: **Projects, Contact**.
 5. **On phones** (640px and narrower) the links with `class="roomy"` are hidden: always **Gallery** and
    **Feedback**. Docs, Statistics and Portfolio stay. The theme switch has the same size and spacing on
    front pages and in the wiki. In the wiki the links move into the table of contents on phones.
@@ -46,10 +46,10 @@ Current bars:
 
 | Site | Bar |
 |---|---|
-| Portfolio | Projects · Contact · theme |
-| Particles+ | Docs · Gallery · Statistics · Feedback · Portfolio · theme |
-| Izomap | Docs · Gallery · Portfolio · theme |
-| MetroCrafter | Portfolio · theme |
+| Portfolio | Projects, Contact, theme |
+| Particles+ | Docs, Gallery, Statistics, Feedback, Portfolio, theme |
+| Izomap | Docs, Gallery, Portfolio, theme |
+| MetroCrafter | Portfolio, theme |
 
 Front and statistics pages write the bar as `<header><a class="home">…</a><nav>…links…<button id="theme">`.
 The wiki builds its bar from `site.links` and links to the front page from `site.front` (see the top of

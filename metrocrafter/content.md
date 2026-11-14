@@ -16,7 +16,7 @@
 -->
 
 ::: hero
-kicker: A Minecraft server · In development
+kicker: A Minecraft server, in development
 title: Metro*Crafter*
 badge: Being built, one station at a time
 
