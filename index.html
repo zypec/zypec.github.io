@@ -49,11 +49,18 @@ main{max-width:calc(var(--text-width) + var(--margin-width) + 48px + 56px);count
 .facts div{display:flex;flex-direction:column;gap:3px}
 .facts dt,.label{font:italic 400 15px/1.3 var(--font-serif);color:var(--muted)}
 .facts dd{margin:0;font-size:15px;line-height:1.45;color:var(--ink)}
-/* Links that act: a ruled box, so they read as something to press, with what they open as an icon. */
+/* Links that act: a drop of the island's glass, so they read as something to press and as part of
+   the same house, with what they open as an icon. */
 .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
-.button{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border:1px solid var(--line-2);border-radius:6px;
-  font:500 14px/1 var(--body);color:var(--ink);background:var(--panel);transition:border-color .15s,color .15s}
-.button:hover{text-decoration:none;border-color:var(--accent);color:var(--accent-ink)}
+.button{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;border:0;border-radius:999px;
+  font:500 14px/1 var(--body);color:var(--ink);background:var(--glass);
+  -webkit-backdrop-filter:var(--glass-filter);backdrop-filter:var(--glass-filter);
+  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px color-mix(in srgb,var(--glass-rim) 28%,transparent),
+    inset 0 -1px 0 color-mix(in srgb,var(--glass-rim) 40%,transparent),0 6px 16px -10px #0000008c;
+  transition:box-shadow .2s,transform .2s,color .15s}
+.button:hover{text-decoration:none;color:var(--accent-ink);transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px var(--accent-line),
+    inset 0 -1px 0 color-mix(in srgb,var(--glass-rim) 40%,transparent),0 8px 20px -10px #0000008c}
 .button svg{width:15px;height:15px;flex:none}
 .button .away{color:var(--muted);font-size:13px}
 

@@ -70,13 +70,14 @@ a:hover{border-bottom-color:currentColor}
 header{position:sticky;top:12px;z-index:10;height:56px;width:fit-content;max-width:calc(100% - 32px);margin:12px auto 0;
   display:flex;gap:14px;align-items:center;padding:0 9px 0 22px;border-radius:999px;isolation:isolate;
   background:var(--glass);backdrop-filter:var(--glass-filter);-webkit-backdrop-filter:var(--glass-filter);
-  box-shadow:inset 1.5px 1.5px 0 -.5px var(--glass-rim),inset -1px -1px 0 -.5px color-mix(in srgb,var(--glass-rim) 45%,transparent),
+  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px color-mix(in srgb,var(--glass-rim) 28%,transparent),
+    inset 0 -1px 0 color-mix(in srgb,var(--glass-rim) 40%,transparent),
     inset 0 0 14px color-mix(in srgb,var(--glass-glow) 45%,transparent),var(--glass-shadow);
   transition:height .5s var(--spring),padding .5s var(--spring),top .5s var(--spring),
     box-shadow .3s,background-color .3s}
 header::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--glass-glow) 70%,transparent),transparent 32%,
-    transparent 70%,color-mix(in srgb,var(--glass-glow) 35%,transparent))}
+  background:linear-gradient(180deg,color-mix(in srgb,var(--glass-glow) 60%,transparent),transparent 45%,
+    transparent 72%,color-mix(in srgb,var(--glass-glow) 22%,transparent))}
 html.scrolled header{top:8px;height:50px}
 /* While it changes size the island holds its contents at their own width and lets the capsule
    reveal them, the way the phone's island opens over what it shows. */
@@ -94,9 +95,8 @@ header.morphing{overflow:hidden;justify-content:center}
 header.morphing>*{flex-shrink:0}
 /* An end of the island riding its edge passes over what the island is still uncovering: it is drawn
    solid, with a shade on its inner side, so it reads as the island's end sliding over them. */
-header .riding{position:relative;z-index:2;background:var(--panel)!important;border-radius:999px}
-header .riding:last-child{box-shadow:-14px 0 12px -6px var(--panel)}
-header .riding:first-child{box-shadow:14px 0 12px -6px var(--panel)}
+header .riding{position:relative;z-index:2;border-radius:999px;background:var(--glass)!important;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 /* The page the reader is on, said inside the island and changed in place when another opens. */
 header .now{max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);font-size:14px;
   font-weight:500;padding-left:14px;border-left:1px solid var(--line-2)}
@@ -381,6 +381,11 @@ a.tile:hover{border-color:var(--accent-line);transform:translateY(-1px)}
   background:var(--panel);color:var(--ink);font-size:14.5px;font-weight:600}
 .btn:hover{border-color:var(--accent-line)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+/* As on the front pages: one button, the action the page leads to, and the rest underlined links. */
+.btn{border-radius:8px}
+.btn:not(.primary){background:none;border-color:transparent;padding:0 10px;text-decoration:underline;
+  text-decoration-color:var(--line-2);text-underline-offset:5px}
+.btn:not(.primary):hover{border-color:transparent;text-decoration-color:var(--accent)}
 .hero figure{position:relative;margin:0;width:42%;min-height:300px;background:var(--stage)}
 .tile.wide{grid-column:span 2}
 .home h3{margin:44px 0 6px;font-size:22px;letter-spacing:-.01em}

@@ -50,17 +50,25 @@ const Island = (() => {
         {duration: 420, delay: 120, easing: 'ease-out', fill: 'backwards'});
     if (Math.abs(to.width - from.width) < 1 && Math.abs(to.height - from.height) < 1) return;
     island.classList.add('morphing');
-    const timing = {duration: 600, easing: 'cubic-bezier(.2,.9,.2,1.12)'};
-    const growing = island.animate([{width: from.width + 'px', height: from.height + 'px'},
-      {width: to.width + 'px', height: to.height + 'px'}], timing);
+    // It moves as a drop of liquid does: drawn thin while it stretches, past its size for a moment,
+    // then settled. The squeeze and the overshoot scale with how far it goes, so a page's name
+    // changing in the wiki barely ripples while a jump between sites swells.
+    const dw = to.width - from.width, dh = to.height - from.height;
+    const squeeze = Math.min(6, Math.abs(dw) * 0.04), swell = Math.min(10, Math.abs(dw) * 0.05);
+    const sign = dw >= 0 ? 1 : -1;
+    const widths = [from.width, from.width + dw * 0.72, to.width + sign * swell, to.width];
+    const heights = [from.height, Math.min(from.height, to.height) - squeeze + dh * 0.5, to.height + squeeze * 0.4, to.height];
+    const offsets = [0, 0.42, 0.74, 1];
+    const timing = {duration: 720, easing: 'cubic-bezier(.33,.8,.3,1)'};
+    const growing = island.animate(offsets.map((offset, at) => ({offset, width: widths[at] + 'px', height: heights[at] + 'px'})), timing);
     // What the island holds stays where it ends while the island grows round it, from the middle;
-    // the brand and the theme button, its two ends, ride its edges instead, so neither is cut off by
-    // an edge on the way and both are where the eye expects them from the first frame.
-    const all = parts(island), half = (to.width - from.width) / 2;
-    const ends = [[all[0], half], [all[all.length - 1], -half]];
-    for (const [part, by] of ends) if (part && all.length > 1 && Math.abs(by) >= 1) {
+    // the brand and the theme button, its two ends, ride its edges instead, frame for frame, so
+    // neither is cut off by an edge on the way and both are where the eye expects them.
+    const all = parts(island);
+    const ends = [[all[0], 1], [all[all.length - 1], -1]];
+    for (const [part, side] of ends) if (part && all.length > 1 && Math.abs(dw) >= 1) {
       part.classList.add('riding');
-      part.animate([{transform: `translateX(${by}px)`}, {transform: 'translateX(0)'}], timing)
+      part.animate(offsets.map((offset, at) => ({offset, transform: `translateX(${side * (to.width - widths[at]) / 2}px)`})), timing)
         .finished.finally(() => part.classList.remove('riding'));
     }
     growing.finished.finally(() => island.classList.remove('morphing'));
@@ -98,10 +106,16 @@ const Island = (() => {
     // faded in.
     const held = new Set(left.held || []);
     for (const part of parts(island)) if (!held.has(said(part))) part.style.opacity = '0';
+    // The size it is held at is let go of with its transitions off, so what it is measured at is the
+    // size it settles at: let go of with them on, the height was caught half way, and the rest of
+    // its transition showed as a jump once the morph was over.
     const arrive = () => fonts().then(() => requestAnimationFrame(() => {
+      island.style.transition = 'none';
       island.style.width = island.style.height = '';
       island.classList.remove('morphing');
       morph(left);
+      island.getBoundingClientRect();
+      island.style.transition = '';
     }));
     if (document.readyState === 'loading') addEventListener('DOMContentLoaded', arrive, {once: true});
     else arrive();
