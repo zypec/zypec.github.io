@@ -452,6 +452,7 @@ const Wiki = (() => {
     const mark = at => links.forEach((link, index) => link.classList.toggle('on', index === at));
     links.forEach(link => link.onclick = event => {
       event.preventDefault();
+      if (link.getAttribute('href') !== '#') history.replaceState(null, '', link.getAttribute('href'));
       headings[+link.dataset.at].scrollIntoView({behavior: 'smooth', block: 'start'});
     });
 
@@ -471,6 +472,7 @@ const Wiki = (() => {
       + `${guide.html}${pager(guide.id)}</article></div>`;
     consoles();
     contents(main.querySelector('.guidewrap'));
+    nameHeadings(guide.id);
     wire();
   }
 
@@ -495,9 +497,42 @@ const Wiki = (() => {
       return draw();
     }
 
+    if (!guide && current.includes('/')) {
+      const at = current.lastIndexOf('/');
+      if (DATA.guides.some(g => g.id === current.slice(0, at))) {
+        const heading = current.slice(at + 1);
+        current = current.slice(0, at);
+        draw();
+        const target = main.querySelector(`article.guide h3[data-heading="${CSS.escape(heading)}"]`);
+        if (target) requestAnimationFrame(() => target.scrollIntoView({block: 'start'}));
+        return;
+      }
+    }
+
     for (const extension of extensions) if (extension.render && extension.render(current)) return;
     if (guide) return renderGuide(guide);
     main.innerHTML = '<div class="page"><div class="empty">Nothing to show.</div></div>';
+  }
+
+  /**
+   * Every heading of a guide gets a name out of its words, so #page/heading opens the page at it:
+   * a link into the middle of a long page, which a support answer or another page can give. The
+   * contents down the right link to the same addresses, so one can be copied from there.
+   */
+  const slug = text => String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  function nameHeadings(page) {
+    const taken = new Set();
+    for (const heading of main.querySelectorAll('article.guide h3')) {
+      let id = slug(heading.textContent) || 'section';
+      for (let n = 2; taken.has(id); n++) id = slug(heading.textContent) + '-' + n;
+      taken.add(id);
+      heading.dataset.heading = id;
+    }
+    for (const link of main.querySelectorAll('aside.toc a[data-at]')) {
+      const heading = main.querySelectorAll('article.guide h3')[+link.dataset.at];
+      if (heading) link.setAttribute('href', '#' + encodeURIComponent(page).replace(/%2F/g, '/') + '/' + heading.dataset.heading);
+    }
   }
 
   // --- on a phone -------------------------------------------------------------------------------
