@@ -22,7 +22,11 @@
     return {cycle: ['auto', own, other], at: stamped === own ? 1 : stamped === other ? 2 : 0};
   }
 
+  const GLYPH = '<svg class="themeglyph" viewBox="0 0 24 24" aria-hidden="true"><g class="tg-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.55 1.55M17.15 17.15l1.55 1.55M5.3 18.7l1.55-1.55M17.15 6.85l1.55-1.55"/></g><g class="tg-moon" fill="currentColor"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4a8.6 8.6 0 1 0 11.2 11.2z"/></g></svg>';
+
   function paint() {
+    const icon = button.querySelector('.icon');
+    if (icon && !icon.firstChild) icon.innerHTML = GLYPH;
     const now = state();
     const {cycle, at} = order();
     button.querySelector('.text').textContent = NAME[now];

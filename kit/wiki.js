@@ -588,6 +588,7 @@ const Wiki = (() => {
    */
   const THEME_KEY = 'zypec-theme';
   const root = document.documentElement;
+  const THEME_GLYPH = '<svg class="themeglyph" viewBox="0 0 24 24" aria-hidden="true"><g class="tg-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.55 1.55M17.15 17.15l1.55 1.55M5.3 18.7l1.55-1.55M17.15 6.85l1.55-1.55"/></g><g class="tg-moon" fill="currentColor"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4a8.6 8.6 0 1 0 11.2 11.2z"/></g></svg>';
   const NAME = {auto: 'Auto', light: 'Light', dark: 'Dark'};
   const system = () => matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
@@ -609,6 +610,8 @@ const Wiki = (() => {
   function paintTheme() {
     const now = themeState();
     const {cycle, at} = themeOrder();
+    const glyph = document.getElementById('themeicon');
+    if (glyph && !glyph.firstChild) glyph.innerHTML = THEME_GLYPH;
     document.getElementById('themetext').textContent = NAME[now];
     document.getElementById('themed').title = (now === 'auto' ? 'Following the system (' + system() + ')' : 'Forced ' + now)
       + ', next: ' + NAME[cycle[(at + 1) % 3]];
