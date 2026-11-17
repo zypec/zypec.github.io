@@ -256,5 +256,93 @@ const Island = (() => {
     overflows();
   }
 
+  /**
+   * The liquid in the glass, three ways. Where the browser draws an SVG filter behind an element
+   * (Chromium), the island bends what lies under its rim as a lens of water does, over a light blur that keeps it
+   * seen rather than the frosted one that hid it: a map drawn at the
+   * island's own size pushes each point of a band along the rim outward, so the page beyond the edge
+   * is drawn in it, pressed together. Elsewhere the frosted glass stays as it is. Its sheen follows
+   * the pointer over it, and a press squeezes it, as a drop gives under a finger.
+   */
+  (() => {
+    const island = bar();
+    if (!island || still()) return;
+
+    const brands = navigator.userAgentData && navigator.userAgentData.brands || [];
+    if (brands.some(one => /Chromium/.test(one.brand))) {
+      const NS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('width', '0');
+      svg.setAttribute('height', '0');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.style.position = 'absolute';
+      svg.innerHTML = '<filter id="kit-liquid" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">'
+        + '<feImage x="0" y="0" preserveAspectRatio="none" result="map"/>'
+        + '<feDisplacementMap in="SourceGraphic" in2="map" scale="44" xChannelSelector="R" yChannelSelector="G"/></filter>';
+      document.body.appendChild(svg);
+      const image = svg.querySelector('feImage');
+
+      /**
+       * The map for a capsule this size: neutral inside, along the rim a push outward that grows to the
+       * edge. Drawn as soon as the page opens, whatever the island is doing, so the lens is on from the
+       * first frame rather than turned on at the end of a morph; again once a morph or a resize is
+       * over. The lens waits for a map: a filter with no image is no filter, and the browser then drops
+       * the whole backdrop, the glass with it.
+       */
+      const draw = (w, h) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const pen = canvas.getContext('2d');
+        const pixels = pen.createImageData(w, h);
+        const r = h / 2, band = Math.min(18, r);
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+          const cx = Math.min(Math.max(x + 0.5, r), w - r);
+          let dx = x + 0.5 - cx, dy = y + 0.5 - r;
+          const reach = Math.hypot(dx, dy), inside = r - reach;
+          let push = 0;
+          if (reach > 0 && inside < band) {
+            const t = 1 - Math.max(0, inside) / band;
+            push = t * t;
+            dx /= reach;
+            dy /= reach;
+          }
+          const at = (y * w + x) * 4;
+          pixels.data[at] = 128 + dx * push * 127;
+          pixels.data[at + 1] = 128 + dy * push * 127;
+          pixels.data[at + 2] = 128;
+          pixels.data[at + 3] = 255;
+        }
+        pen.putImageData(pixels, 0, 0);
+        image.setAttribute('width', w);
+        image.setAttribute('height', h);
+        image.setAttribute('href', canvas.toDataURL());
+      };
+      let drawn = '';
+      const fit = () => {
+        if (drawn && island.classList.contains('morphing')) return;
+        const box = island.getBoundingClientRect(), w = Math.round(box.width), h = Math.round(box.height);
+        if (!w || !h || drawn === w + 'x' + h) return;
+        drawn = w + 'x' + h;
+        draw(w, h);
+        document.documentElement.classList.add('refracts');
+      };
+      fit();
+      new ResizeObserver(() => requestAnimationFrame(fit)).observe(island);
+      new MutationObserver(() => requestAnimationFrame(fit)).observe(island, {attributes: true, attributeFilter: ['class', 'style']});
+    }
+
+    island.addEventListener('pointermove', event => {
+      const box = island.getBoundingClientRect();
+      island.style.setProperty('--lx', (event.clientX - box.left) + 'px');
+      island.style.setProperty('--ly', (event.clientY - box.top) + 'px');
+    }, {passive: true});
+
+    island.addEventListener('pointerdown', () => island.animate([
+      {transform: 'scale(1, 1)'}, {transform: 'scale(1.018, .93)', offset: .3},
+      {transform: 'scale(.994, 1.025)', offset: .65}, {transform: 'scale(1, 1)'}],
+      {duration: 560, easing: 'cubic-bezier(.2,.9,.2,1)', composite: 'add'}), {passive: true});
+  })();
+
   return {measure, morph, around};
 })();
