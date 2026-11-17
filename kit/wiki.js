@@ -620,7 +620,7 @@ const Wiki = (() => {
     if (next === 'auto') root.removeAttribute('data-theme');
     else root.setAttribute('data-theme', next);
     try {
-      if (next === 'auto') localStorage.removeItem(THEME_KEY);
+      if (next === 'auto') { localStorage.removeItem(THEME_KEY); localStorage.removeItem('pp-theme'); }
       else localStorage.setItem(THEME_KEY, next);
     } catch (unavailable) {}
     paintTheme();

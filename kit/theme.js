@@ -38,7 +38,7 @@
     if (next === 'auto') root.removeAttribute('data-theme');
     else root.setAttribute('data-theme', next);
     try {
-      if (next === 'auto') localStorage.removeItem('zypec-theme');
+      if (next === 'auto') { localStorage.removeItem('zypec-theme'); localStorage.removeItem('pp-theme'); }
       else localStorage.setItem('zypec-theme', next);
     } catch (unavailable) {}
     paint();
