@@ -10,7 +10,7 @@
   --code:#2a2622; --code-bg:#f4f0f8; --code-a:#2d6f6a;
   --stage:#120c1a; --stage-2:#1d1527;
   --shadow:none;
-  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --body:"Helvetica Neue",Helvetica,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   /* The headings a page is read under, in the portfolio's serif, so every site reads as one house.
      The small titles of cards, tiles and buttons stay in the body face: a serif that small reads as a

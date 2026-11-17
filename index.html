@@ -16,7 +16,7 @@ try {
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,400;0,18..144,500;0,18..144,700;1,18..144,400&family=IBM+Plex+Mono:wght@400;500&family=Pixelify+Sans:wght@600;700&family=Overpass:wght@900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,400;0,18..144,500;0,18..144,700;1,18..144,400&family=Pixelify+Sans:wght@600;700&family=Overpass:wght@900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="kit/front.css">
 <style>
 /* Preprint: a statistician's portfolio set the way a good paper is. An opening, numbered sections, notes
@@ -26,7 +26,7 @@ try {
 /* ── Settings: the values worth changing by hand. ── */
 :root{
   --font-serif:Merriweather,Georgia,"Times New Roman",serif;   /* the name, the headings, the opening */
-  --font-label:"IBM Plex Mono",ui-monospace,monospace;      /* numbers, labels, captions */
+  --font-label:"Helvetica Neue",Helvetica,Arial,sans-serif;      /* numbers, labels, captions */
   --text-width:680px;      /* the column that is read */
   --margin-width:250px;    /* the column of notes and captions beside it, on a wide screen */
   --size-name:clamp(48px,7vw,76px);
@@ -72,10 +72,10 @@ main{max-width:calc(var(--text-width) + var(--margin-width) + 48px + 56px);count
 section{margin-top:64px;counter-increment:section;counter-reset:sub}
 /* A subsection is numbered under its section: 2.1, 2.2. */
 section>h3{display:flex;align-items:baseline;gap:14px;font:500 22px/1.2 var(--font-serif);margin:40px 0 14px;counter-increment:sub}
-section>h3::before{content:counter(section) "." counter(sub);font:500 13px/1 var(--font-label);color:var(--accent);min-width:22px}
+section>h3::before{content:counter(section) "." counter(sub);font:600 13px/1 var(--font-label);color:var(--accent);min-width:22px}
 section>h2{display:flex;align-items:baseline;gap:18px;font:500 var(--size-section)/1.15 var(--font-serif);letter-spacing:-.01em;
   margin:0 0 20px}
-section>h2::before{content:counter(section);font:500 15px/1 var(--font-label);color:var(--accent);min-width:22px}
+section>h2::before{content:counter(section);font:600 15px/1 var(--font-label);color:var(--accent);min-width:22px}
 .prose p,.prose li{color:var(--ink-2)}
 .prose p{margin:0 0 16px}
 .prose ul{padding-left:20px;margin:0 0 16px}
@@ -83,15 +83,15 @@ section>h2::before{content:counter(section);font:500 15px/1 var(--font-label);co
 .prose strong{color:var(--ink);font-weight:600}
 
 /* Notes in the margin: floated out of the column on a wide screen, set in under the line on a narrow one. */
-.noteref{font:500 11px/0 var(--font-label);color:var(--accent);margin-left:1px}
+.noteref{font:600 11px/0 var(--font-label);color:var(--accent);margin-left:1px}
 .sidenote{display:block;margin:8px 0 8px 16px;padding-left:12px;border-left:2px solid var(--line-2);font-size:14px;line-height:1.55;
   color:var(--muted)}
-.sidenote::before{content:attr(data-n) " ";font:500 11px/1 var(--font-label);color:var(--accent)}
+.sidenote::before{content:attr(data-n) " ";font:600 11px/1 var(--font-label);color:var(--accent)}
 
 /* A table, ruled the way booktabs rules one: heavy above and below, light under the heads, nothing between rows. */
 .table{margin:8px 0 40px;counter-increment:table}
 .table .caption{font-size:14px;color:var(--muted);margin:0 0 10px}
-.table .caption::before{content:"Table " counter(table) ". ";font:500 12.5px/1 var(--font-label);color:var(--ink)}
+.table .caption::before{content:"Table " counter(table) ". ";font:600 12.5px/1 var(--font-label);color:var(--ink)}
 .table .scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);font-size:14.5px}
 th{font:italic 400 15px/1.3 var(--font-serif);color:var(--muted);text-align:left;
@@ -132,7 +132,7 @@ td.empty{color:var(--muted);font-weight:400;white-space:normal;font-style:italic
 .project figure a.frame:hover img,.project figure a.frame:hover video{transform:scale(1.015)}
 .project figure img,.project figure video{display:block;width:100%;height:100%;object-fit:cover}
 .project figcaption{font-size:13.5px;line-height:1.5;color:var(--muted);margin-top:8px}
-.project figcaption::before{content:"Figure " counter(figure) ". ";font:500 12px/1 var(--font-label);color:var(--ink)}
+.project figcaption::before{content:"Figure " counter(figure) ". ";font:600 12px/1 var(--font-label);color:var(--ink)}
 /* A project with no pictures yet draws what it is: here, the lines it runs. */
 .lines{display:flex;flex-direction:column;justify-content:center;gap:18px;height:100%;padding:0 9%}
 .lines span{display:grid;grid-template-columns:110px minmax(0,1fr);align-items:center;gap:16px;color:#e9e4f1;font-size:14px}
