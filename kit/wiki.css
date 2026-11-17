@@ -126,22 +126,22 @@ header .links a:hover{background:var(--hover);color:var(--ink)}
 nav .navlinks{display:none}
 /* A sun for light, a moon for dark and a half-filled disc for following the system, drawn by the
    stylesheet from the page's own theme, so the right one shows before the script runs. */
-:root{--icon-auto:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='translate%281.64 1.64%29 scale%28.58%29' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.2'/%3E%3Cpath d='M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.55 1.55M17.15 17.15l1.55 1.55M5.3 18.7l1.55-1.55M17.15 6.85l1.55-1.55'/%3E%3C/g%3E%3Cg transform='translate%288.4 8.4%29 scale%28.6%29'%3E%3Cpath fill='black' d='M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4a8.6 8.6 0 1 0 11.2 11.2z'/%3E%3C/g%3E%3C/svg%3E");--icon-light:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.2'/%3E%3Cpath d='M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.55 1.55M17.15 17.15l1.55 1.55M5.3 18.7l1.55-1.55M17.15 6.85l1.55-1.55'/%3E%3C/g%3E%3C/svg%3E");--icon-dark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4a8.6 8.6 0 1 0 11.2 11.2z'/%3E%3C/svg%3E")}
+:root{--icon-auto:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.2'/%3E%3Cpath d='M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M5.3 5.3l1.55 1.55M5.3 18.7l1.55-1.55'/%3E%3C/g%3E%3Cpath fill='black' d='M12 7.8a4.2 4.2 0 0 1 0 8.4z'/%3E%3C/svg%3E");--icon-light:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.2'/%3E%3Cpath d='M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.55 1.55M17.15 17.15l1.55 1.55M5.3 18.7l1.55-1.55M17.15 6.85l1.55-1.55'/%3E%3C/g%3E%3C/svg%3E");--icon-dark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4a8.6 8.6 0 1 0 11.2 11.2z'/%3E%3C/svg%3E")}
 #themeicon{width:15px;height:15px;flex:none;display:inline-block;background:currentColor;-webkit-mask:var(--icon-auto) center/contain no-repeat;mask:var(--icon-auto) center/contain no-repeat}
 :root[data-theme=light] #themeicon:empty{-webkit-mask-image:var(--icon-light);mask-image:var(--icon-light)}
 :root[data-theme=dark] #themeicon:empty{-webkit-mask-image:var(--icon-dark);mask-image:var(--icon-dark)}
 #themeicon:not(:empty){background:none;-webkit-mask:none;mask:none}
-/* The theme as a sun, a moon, or both for following the system, the glyph the scripts put in the
-   button: each turns and shrinks into the next. Before the script runs, the mask above draws the same. */
+/* The theme as a sun, a moon, or a sun half in night for following the system, the glyph the scripts
+   put in the button: each turns into the next. Before the script runs, the mask above draws the same. */
 .themeglyph{width:15px;height:15px;display:block;overflow:visible}
-.themeglyph g{transform-box:view-box;transform-origin:50% 50%;transition:transform .5s cubic-bezier(.33,.8,.3,1),opacity .35s ease}
-.themeglyph .tg-sun{transform:translate(-3.4px,-3.4px) scale(.58)}
-.themeglyph .tg-moon{transform:translate(3.6px,3.6px) scale(.6)}
-:root[data-theme=light] .themeglyph .tg-sun{transform:none}
-:root[data-theme=light] .themeglyph .tg-moon{opacity:0;transform:translate(3.6px,3.6px) scale(.2) rotate(-60deg)}
-:root[data-theme=dark] .themeglyph .tg-moon{transform:none}
-:root[data-theme=dark] .themeglyph .tg-sun{opacity:0;transform:translate(-3.4px,-3.4px) scale(.2) rotate(90deg)}
-@media (prefers-reduced-motion:reduce){.themeglyph g{transition:none}}
+.themeglyph g,.themeglyph path{transform-box:view-box;transform-origin:50% 50%;transition:transform .5s cubic-bezier(.33,.8,.3,1),opacity .35s ease}
+.themeglyph .tg-rays{opacity:0;transform:scale(.55) rotate(-25deg)}
+.themeglyph .tg-moon{opacity:0;transform:scale(.3) rotate(-60deg)}
+:root[data-theme=light] .themeglyph .tg-rays{opacity:1;transform:none}
+:root[data-theme=light] .themeglyph .tg-half{opacity:0;transform:scaleX(0)}
+:root[data-theme=dark] .themeglyph .tg-sun{opacity:0;transform:scale(.3) rotate(90deg)}
+:root[data-theme=dark] .themeglyph .tg-moon{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.themeglyph g,.themeglyph path{transition:none}}
 /* The button says the theme before wiki.js writes it, as the front pages' does, so it is its own width
    from the first frame and the island is not widened once the words come in. */
 #themetext:empty::after{content:"Auto"}
