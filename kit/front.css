@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:opsz,wght@18..144,400..800&display=swap");
 /* The pages around a wiki: a project's front page, its statistics, the portfolio itself. The wiki's
    own palette and type, so moving from one to the other is moving between rooms of one house. A site
    recolors it the same way it recolors the wiki, by redefining the --accent* tokens. */
@@ -15,7 +15,7 @@
   /* The headings a page is read under, in the portfolio's serif, so every site reads as one house.
      The small titles of cards, tiles and buttons stay in the body face: a serif that small reads as a
      quote rather than a title. */
-  --display:Newsreader,Georgia,"Times New Roman",serif;
+  --display:Merriweather,Georgia,"Times New Roman",serif;
   --r:10px; --r-sm:7px;
 }
 @media (prefers-color-scheme:dark){
