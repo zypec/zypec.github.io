@@ -8,7 +8,6 @@
   const root = document.documentElement;
   const button = document.getElementById('theme');
   if (!button) return;
-  const ICON = {auto: '◐', light: '○', dark: '●'};
   const NAME = {auto: 'Auto', light: 'Light', dark: 'Dark'};
   const system = () => matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
@@ -26,7 +25,6 @@
   function paint() {
     const now = state();
     const {cycle, at} = order();
-    button.querySelector('.icon').textContent = ICON[now];
     button.querySelector('.text').textContent = NAME[now];
     button.title = (now === 'auto' ? 'Following the system (' + system() + ')' : 'Forced ' + now)
       + ', next: ' + NAME[cycle[(at + 1) % 3]];

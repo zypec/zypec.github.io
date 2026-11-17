@@ -108,20 +108,23 @@ header nav a:hover{background:var(--hover);color:var(--ink);text-decoration:none
   color:var(--ink-2);border-radius:999px;height:38px;min-width:38px;padding:0 14px;margin-left:16px;font:inherit;font-size:13.5px;
   cursor:pointer;transition:border-color .15s,color .15s}
 #theme:hover{border-color:var(--muted);color:var(--ink)}
-#theme .icon{font-size:14px;line-height:1}
+/* A sun for light, a moon for dark and a half-filled disc for following the system, drawn by the
+   stylesheet from the page's own theme, so the right one shows before the script runs. */
+:root{--icon-auto:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8.2' fill='none' stroke='black' stroke-width='2'/%3E%3Cpath fill='black' d='M12 3.8a8.2 8.2 0 0 0 0 16.4z'/%3E%3C/svg%3E");--icon-light:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.2'/%3E%3Cpath d='M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.55 1.55M17.15 17.15l1.55 1.55M5.3 18.7l1.55-1.55M17.15 6.85l1.55-1.55'/%3E%3C/g%3E%3C/svg%3E");--icon-dark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4a8.6 8.6 0 1 0 11.2 11.2z'/%3E%3C/svg%3E")}
+#theme .icon{width:15px;height:15px;flex:none;display:inline-block;background:currentColor;-webkit-mask:var(--icon-auto) center/contain no-repeat;mask:var(--icon-auto) center/contain no-repeat}
+:root[data-theme=light] #theme .icon{-webkit-mask-image:var(--icon-light);mask-image:var(--icon-light)}
+:root[data-theme=dark] #theme .icon{-webkit-mask-image:var(--icon-dark);mask-image:var(--icon-dark)}
 /* The button says the theme before theme.js, loaded at the end of the page, writes it: empty, it was
    narrower for the first frames and the island widened once the words came in. */
-#theme .icon:empty::after{content:"◐"}
 #theme .text:empty::after{content:"Auto"}
-:root[data-theme=light] #theme .icon:empty::after{content:"○"}
 :root[data-theme=light] #theme .text:empty::after{content:"Light"}
-:root[data-theme=dark] #theme .icon:empty::after{content:"●"}
 :root[data-theme=dark] #theme .text:empty::after{content:"Dark"}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 main{max-width:1120px;margin:0 auto;padding:0 28px 80px}
 footer{max-width:1120px;margin:0 auto;padding:28px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;
   display:flex;gap:14px;flex-wrap:wrap}
 footer a{color:var(--ink-2)}
+footer .legal{flex-basis:100%;font-size:12px;color:var(--muted)}
 
 .btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;font-weight:600;
   font-size:15px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink)}

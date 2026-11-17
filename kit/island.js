@@ -116,6 +116,20 @@ const Island = (() => {
       if (!island.style.width) for (const [part] of ends(island)) land(part);
       return;
     }
+    // Where each end comes to rest, against where morphing lays it out at the island's final size:
+    // morphing, the links are laid out whole, while at rest they scroll inside a narrow island and
+    // the theme button sticks to its visible edge. The ride ends where it rests, or it rode to the end
+    // of the links, past the edge, and jumped back once the morph was over.
+    const shifts = new Map();
+    for (const [part, side] of ends(island)) {
+      land(part);
+      const rest = part.getBoundingClientRect().left;
+      island.classList.add('morphing');
+      ride(part, side, to.width, to.width);
+      shifts.set(part, rest - part.getBoundingClientRect().left);
+      island.classList.remove('morphing');
+      land(part);
+    }
     island.classList.add('morphing');
     // It moves as a drop of liquid does: drawn thin while it stretches, past its size for a moment,
     // then settled. The squeeze and the overshoot scale with how far it goes, so a page's name
@@ -135,8 +149,10 @@ const Island = (() => {
     const both = Math.abs(dw) >= 1 ? ends(island) : [];
     if (!both.length) for (const [part] of ends(island)) land(part);
     for (const [part, side] of both) {
+      const shift = shifts.get(part) || 0;
       ride(part, side, to.width, from.width);
-      const riding = part.animate(offsets.map((offset, at) => ({offset, left: side * (to.width - widths[at]) / 2 + 'px'})), timing);
+      part.style.left = parseFloat(part.style.left) + shift + 'px';
+      const riding = part.animate(offsets.map((offset, at) => ({offset, left: shift + side * (to.width - widths[at]) / 2 + 'px'})), timing);
       rides.set(part, riding);
       riding.finished.finally(() => { if (rides.get(part) === riding) land(part); });
     }

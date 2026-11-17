@@ -521,6 +521,35 @@ const Wiki = (() => {
    */
   const slug = text => String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+  const LINK_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.8 9.2a2.9 2.9 0 0 0 4.1 0l2.2-2.2a2.9 2.9 0 0 0-4.1-4.1l-1 1"/><path d="M9.2 6.8a2.9 2.9 0 0 0-4.1 0L2.9 9a2.9 2.9 0 0 0 4.1 4.1l1-1"/></svg>';
+
+  /**
+   * A button beside a heading that copies the address of that heading, the one the contents link
+   * to, and puts it in the bar, so a section can be sent to someone as it is.
+   */
+  function linkButton(heading, page, id) {
+    const old = heading.querySelector('.headlink');
+    if (old) old.remove();
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'headlink';
+    button.setAttribute('aria-label', 'Copy a link to this section');
+    button.title = 'Copy a link to this section';
+    button.innerHTML = LINK_ICON;
+    let back = null;
+    button.onclick = () => {
+      const address = location.origin + location.pathname + '#' + encodeURIComponent(page).replace(/%2F/g, '/') + '/' + id;
+      history.replaceState(null, '', address);
+      navigator.clipboard.writeText(address).then(() => {
+        button.innerHTML = COPIED_ICON + '<span>Copied</span>';
+        button.classList.add('done');
+        clearTimeout(back);
+        back = setTimeout(() => { button.innerHTML = LINK_ICON; button.classList.remove('done'); }, 1600);
+      }).catch(() => {});
+    };
+    heading.appendChild(button);
+  }
+
   function nameHeadings(page) {
     const taken = new Set();
     for (const heading of main.querySelectorAll('article.guide h3')) {
@@ -528,6 +557,7 @@ const Wiki = (() => {
       for (let n = 2; taken.has(id); n++) id = slug(heading.textContent) + '-' + n;
       taken.add(id);
       heading.dataset.heading = id;
+      linkButton(heading, page, id);
     }
     for (const link of main.querySelectorAll('aside.toc a[data-at]')) {
       const heading = main.querySelectorAll('article.guide h3')[+link.dataset.at];
@@ -558,7 +588,6 @@ const Wiki = (() => {
    */
   const THEME_KEY = 'zypec-theme';
   const root = document.documentElement;
-  const ICON = {auto: '◐', light: '○', dark: '●'};
   const NAME = {auto: 'Auto', light: 'Light', dark: 'Dark'};
   const system = () => matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
@@ -580,7 +609,6 @@ const Wiki = (() => {
   function paintTheme() {
     const now = themeState();
     const {cycle, at} = themeOrder();
-    document.getElementById('themeicon').textContent = ICON[now];
     document.getElementById('themetext').textContent = NAME[now];
     document.getElementById('themed').title = (now === 'auto' ? 'Following the system (' + system() + ')' : 'Forced ' + now)
       + ', next: ' + NAME[cycle[(at + 1) % 3]];

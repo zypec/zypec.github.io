@@ -124,14 +124,16 @@ header .links{display:flex;gap:4px;align-items:center}
 header .links a{border:0;color:var(--ink-2);padding:8px 12px;border-radius:999px;font-size:14.5px;line-height:24px;white-space:nowrap}
 header .links a:hover{background:var(--hover);color:var(--ink)}
 nav .navlinks{display:none}
-#themeicon{font-size:14px;line-height:1}
+/* A sun for light, a moon for dark and a half-filled disc for following the system, drawn by the
+   stylesheet from the page's own theme, so the right one shows before the script runs. */
+:root{--icon-auto:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8.2' fill='none' stroke='black' stroke-width='2'/%3E%3Cpath fill='black' d='M12 3.8a8.2 8.2 0 0 0 0 16.4z'/%3E%3C/svg%3E");--icon-light:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.2'/%3E%3Cpath d='M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.55 1.55M17.15 17.15l1.55 1.55M5.3 18.7l1.55-1.55M17.15 6.85l1.55-1.55'/%3E%3C/g%3E%3C/svg%3E");--icon-dark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4a8.6 8.6 0 1 0 11.2 11.2z'/%3E%3C/svg%3E")}
+#themeicon{width:15px;height:15px;flex:none;display:inline-block;background:currentColor;-webkit-mask:var(--icon-auto) center/contain no-repeat;mask:var(--icon-auto) center/contain no-repeat}
+:root[data-theme=light] #themeicon{-webkit-mask-image:var(--icon-light);mask-image:var(--icon-light)}
+:root[data-theme=dark] #themeicon{-webkit-mask-image:var(--icon-dark);mask-image:var(--icon-dark)}
 /* The button says the theme before wiki.js writes it, as the front pages' does, so it is its own width
    from the first frame and the island is not widened once the words come in. */
-#themeicon:empty::after{content:"◐"}
 #themetext:empty::after{content:"Auto"}
-:root[data-theme=light] #themeicon:empty::after{content:"○"}
 :root[data-theme=light] #themetext:empty::after{content:"Light"}
-:root[data-theme=dark] #themeicon:empty::after{content:"●"}
 :root[data-theme=dark] #themetext:empty::after{content:"Dark"}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 #navtoggle{display:none}
@@ -156,6 +158,7 @@ nav a:hover{color:var(--ink);background:var(--hover)}
 nav a.on{color:var(--accent-ink);background:var(--accent-soft);font-weight:600}
 nav a .n{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;font-weight:400;font-family:var(--body)}
 nav a.guide{font-family:var(--body);font-size:14.5px}
+nav .navfoot .legal{display:block;margin-top:8px;font-size:11.5px;line-height:1.45;color:var(--muted)}
 nav .navfoot{margin:28px 12px 0;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;
   line-height:1.7}
 nav .navfoot a{display:inline;padding:0;margin:0;font-family:var(--body);font-size:12.5px;color:var(--ink-2);
@@ -228,6 +231,15 @@ h3 .count{font-size:14px;color:var(--muted);font-weight:400;margin-left:10px;let
 article.guide{max-width:800px;margin:0}
 article.guide h2{font-size:34px;margin-bottom:10px}
 article.guide h3{font-size:20px;margin:40px 0 10px}
+/* Shown beside a heading under the pointer, and always on a screen with no pointer to hover with. */
+article.guide h3 .headlink{display:inline-flex;align-items:center;gap:5px;vertical-align:middle;margin-left:8px;padding:3px 6px;
+  border:1px solid transparent;border-radius:6px;background:none;color:var(--muted);font:inherit;font-size:12px;font-weight:500;line-height:1;cursor:pointer;
+  opacity:0;transition:opacity .15s,background .15s}
+article.guide h3:hover .headlink,article.guide h3 .headlink:focus-visible,article.guide h3 .headlink.done{opacity:1}
+article.guide h3 .headlink:hover{border-color:var(--line);background:var(--code-bg);color:var(--ink)}
+article.guide h3 .headlink.done{color:var(--accent-ink)}
+article.guide h3 .headlink svg{width:14px;height:14px}
+@media (hover:none){article.guide h3 .headlink{opacity:.7}}
 article.guide p{margin:0 0 14px;color:var(--ink-2);text-wrap:pretty;font-size:16px;line-height:1.6}
 article.guide p.lede{font-size:18px;line-height:1.55;color:var(--ink);margin-bottom:20px}
 article.guide pre{margin:0 0 18px}
@@ -338,6 +350,13 @@ button.tag.var:hover{color:var(--accent-ink);background:transparent;text-decorat
 
 @media (max-width:1100px){main{padding:36px 36px 120px}}
 /* On a phone the contents are a button, not the first screen and a half of every page. */
+@keyframes navdrip{
+  0%{clip-path:inset(0 34% 100% 34% round 22px);opacity:.5}
+  55%{clip-path:inset(0 3% 6% 3% round 22px);opacity:1}
+  82%{clip-path:inset(0 0 -6px 0 round 22px)}
+  100%{clip-path:inset(0 0 0 0 round 22px)}
+}
+@keyframes navcontent{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media (max-width:860px){
   header{height:auto;width:auto;max-width:none;margin:8px 8px 0;top:8px;flex-wrap:wrap;gap:10px;padding:10px 10px 10px 18px;
     border-radius:26px}
@@ -355,7 +374,10 @@ button.tag.var:hover{color:var(--accent-ink);background:transparent;text-decorat
      where the reader is looking, and a search's results show the moment anything is typed. */
   nav{display:none;position:fixed;top:var(--head,108px);left:8px;right:8px;bottom:8px;width:auto;height:auto;z-index:9;margin:0;
     padding:12px 10px 40px;border-radius:22px;background:color-mix(in srgb,var(--panel) 90%,transparent)}
-  nav.open{display:block}
+  /* It opens as a drop runs down: narrow at the bar, stretching to its length, a little past its foot,
+     then settled, in the island's own easing. */
+  nav.open{display:block;animation:navdrip .52s cubic-bezier(.33,.8,.3,1) both}
+  nav.open>*{animation:navcontent .42s .1s ease-out both}
   body.navopen{overflow:hidden}
   main{padding:28px 16px 96px;width:100%}
   h2{font-size:30px}
@@ -465,3 +487,4 @@ article.guide th{text-align:left;font-size:13px;color:var(--muted);font-weight:6
 article.guide td{padding:9px 16px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
 article.guide tr:last-child td{border-bottom:0}
 article.guide .args{margin:0 0 20px}
+@media (prefers-reduced-motion:reduce){nav.open,nav.open>*{animation:none}}
