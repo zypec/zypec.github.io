@@ -62,7 +62,9 @@ main{max-width:calc(var(--text-width) + var(--margin-width) + 48px + 56px);count
   box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 0 0 1px var(--accent-line),
     inset 0 -1px 0 color-mix(in srgb,var(--glass-rim) 40%,transparent),0 8px 20px -10px #0000008c}
 .button svg{width:15px;height:15px;flex:none}
-.button .away{color:var(--muted);font-size:13px}
+.button svg.away{width:13px;height:13px;color:var(--muted)}
+.button svg.onward{width:15px;height:15px;transition:transform .15s}
+.button:hover svg.onward{transform:translateX(2px)}
 
 .abstract{padding:32px 0 8px}
 .abstract p{font:400 21px/1.55 var(--font-serif);color:var(--ink-2);margin:10px 0 0}
@@ -185,6 +187,8 @@ const MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 const ICON = (body) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
 const LINKEDIN = ICON('<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>');
 const GITHUB = ICON('<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>');
+const AWAY = '<svg class="away" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>';
+const ONWARD = '<svg class="onward" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
 const iconFor = href => href.startsWith('mailto:') ? MAIL : /linkedin\.com/.test(href) ? LINKEDIN : /github\.com/.test(href) ? GITHUB : '';
 
 Content.kind('title', block => `<div class="titleblock"><h1>${inline(block.one('name'))}</h1>`
@@ -193,7 +197,7 @@ Content.kind('title', block => `<div class="titleblock"><h1>${inline(block.one('
   + `<div class="links">${block.pairs('link').map(([words, href]) => {
     const away = /^https?:/.test(href);
     return `<a class="button" href="${escape(href)}"${away ? ' target="_blank" rel="noopener"' : ''}>`
-      + `${iconFor(href)}${inline(words)}${away ? '<span class="away" aria-hidden="true">↗</span>' : ''}</a>`;
+      + `${iconFor(href)}${inline(words)}${away ? AWAY : ''}</a>`;
   }).join('')}</div>`
   + `</div>`);
 
@@ -246,7 +250,7 @@ Content.kind('project', block => {
     + `${block.one('status') ? `<span class="status">${inline(block.one('status'))}</span>` : ''}</h3>`
     + `<figure><a class="frame" href="${link}" aria-label="${escape('Open ' + block.one('name'))}">${picture}</a>${block.one('caption') ? `<figcaption>${inline(block.one('caption'))}</figcaption>` : ''}</figure>`
     + `<div class="body">${block.html}</div>${facts ? `<dl>${facts}</dl>` : ''}`
-    + `<a class="button open" href="${link}">${inline(block.one('open') || 'Open ' + block.one('name'))} →</a></article>`;
+    + `<a class="button open" href="${link}">${inline(block.one('open') || 'Open ' + block.one('name'))}${ONWARD}</a></article>`;
 });
 
 Content.kind('colophon', block => `<footer class="colophon">${block.html}</footer>`);
