@@ -178,10 +178,12 @@ nav .navfoot a{display:inline;padding:0;margin:0;font-family:var(--body);font-si
 
 /* the page -------------------------------------------------------------- */
 main{flex:1;min-width:0;padding:40px 56px 120px}
-main>.page{max-width:1040px;margin:0 auto}
-.crumb{font-size:13px;color:var(--muted);margin:0 0 10px;font-weight:500}
+main>.page{max-width:1040px;margin:0}
+.crumb,article.guide p.crumb{font-size:13px;line-height:1.4;color:var(--muted);margin:0 0 10px;font-weight:500}
 h2{font-family:var(--display);font-size:42px;line-height:1.15;font-weight:600;margin:0 0 12px;letter-spacing:-.01em;text-wrap:balance}
-.type h2{font-family:var(--mono);font-size:36px;letter-spacing:-.02em}
+/* Every page's title is the same: a guide's, a script type's and a report's, in the display face at
+   one size, under the crumb that names its group. */
+main>.page>h2,article.guide>h2{font-size:34px;margin:0 0 10px}
 .aka{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:14px;margin:0 0 18px}
 .aka code{background:var(--sunk);color:var(--code);padding:2px 8px;border-radius:6px;font-size:13px}
 .aka a code{color:var(--accent-ink)}
@@ -284,14 +286,16 @@ article.guide ul.tree{border:1px solid var(--line);border-radius:var(--r);paddin
 ul.tree li{border:0;padding:0}
 ul.tree li.dir{font-family:var(--mono);font-size:14px;color:var(--ink);font-weight:600}
 ul.tree ul{list-style:none;margin:6px 0 0;padding:0 0 0 20px;border:0;border-left:1px solid var(--line-2);border-radius:0}
-ul.tree ul li{display:grid;grid-template-columns:13em 1fr;gap:2px 24px;align-items:baseline;
+ul.tree ul li{display:grid;grid-template-columns:200px 1fr;gap:2px 24px;align-items:baseline;
   padding:5px 0;position:relative;border:0;font-size:14.5px}
 ul.tree ul li::before{content:"";position:absolute;left:-20px;top:1.15em;width:12px;border-top:1px solid var(--line-2)}
-ul.tree ul li>code{background:none;padding:0;color:var(--ink-2);font-size:13.5px}
-ul.tree ul li>code::before{content:"";display:inline-block;width:14px;height:14px;margin-right:9px;vertical-align:-2px;
+ul.tree ul li>code,ul.tree ul li>a>code{background:none;padding:0;color:var(--ink-2);font-size:13.5px}
+ul.tree ul li>a{border:0;justify-self:start}
+ul.tree ul li>a:hover>code{color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px}
+ul.tree ul li>code::before,ul.tree ul li>a>code::before{content:"";display:inline-block;width:14px;height:14px;margin-right:9px;vertical-align:-2px;
   background:currentColor;opacity:.55;-webkit-mask:var(--icon-file) center/contain no-repeat;mask:var(--icon-file) center/contain no-repeat}
-ul.tree ul li.dir>code{color:var(--ink);font-weight:600}
-ul.tree ul li.dir>code::before{opacity:.85;-webkit-mask:var(--icon-dir) center/contain no-repeat;mask:var(--icon-dir) center/contain no-repeat}
+ul.tree ul li.dir>code,ul.tree ul li.dir>a>code{color:var(--ink);font-weight:600}
+ul.tree ul li.dir>code::before,ul.tree ul li.dir>a>code::before{opacity:.85;-webkit-mask:var(--icon-dir) center/contain no-repeat;mask:var(--icon-dir) center/contain no-repeat}
 ul.tree ul li.dir+li:not(.dir){margin-top:4px;padding-top:10px;border-top:1px solid var(--line)}
 ul.tree ul li>span{color:var(--ink-2);font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.5;text-wrap:pretty}
 @media (max-width:560px){
@@ -319,6 +323,30 @@ table.cost tr:last-child td{border-bottom:0}
 .arg>summary:hover .k,.arg[open]>summary .k{color:var(--accent-ink)}
 .arg[open]>summary{background:var(--side)}
 .arg .k{font-weight:600;font-size:14.5px;color:var(--ink);min-width:0;overflow-wrap:anywhere}
+.arg .k.w{font-family:var(--body);font-size:15px}
+/* A list may name its columns, as a table would, in a row of its own above the first entry. */
+.args>.head{display:grid;grid-template-columns:14em minmax(0,1fr) auto;gap:10px 20px;padding:9px 52px 9px 22px;
+  background:var(--side);border-bottom:1px solid var(--line)}
+.args>.head>span{font-size:13px;font-weight:600;color:var(--muted)}
+.args>.head+.arg{border-top:0}
+/* An entry a link went to is outlined for a moment, so the eye finds it among the others. */
+.arg{scroll-margin-top:96px}
+@keyframes flash{from{box-shadow:inset 0 0 0 2px var(--accent)}to{box-shadow:inset 0 0 0 2px transparent}}
+.arg.flash{animation:flash 1.6s ease-out}
+/* A list whose names are long, several particles or a sentence, gives them a third of the row. */
+.args.names .arg>summary,.args.names .arg>.sum,.args.names>.head{grid-template-columns:minmax(140px,34%) minmax(0,1fr) auto}
+.args.names .body{padding-left:calc(34% + 20px)}
+/* The value a setting has until it is changed, beside the other tags of its row. */
+.tag.def{background:none;border:1px solid var(--line-2);color:var(--muted)}
+.tag.def code{background:none;padding:0;color:var(--ink);font-size:inherit}
+/* An entry that opens says so with a chevron at the end of its row; a row that does not open, in a
+   list where others do, keeps a faint one so the column of chevrons does not break. */
+.arg>summary,.arg>.sum{position:relative;padding-right:52px}
+.arg>summary::after,.args:has(>details.arg)>.arg.flat>.sum::after{content:"";position:absolute;right:24px;top:23px;width:7px;height:7px;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .2s ease}
+.arg[open]>summary::after{transform:rotate(45deg)}
+.arg>summary:hover::after{border-color:var(--accent-ink)}
+.args:has(>details.arg)>.arg.flat>.sum::after{opacity:.3}
 .arg .s{color:var(--ink-2);font-size:15.5px;flex:1;min-width:180px}
 .arg .s strong,.body strong,.lede strong,.detail strong,.sheet strong{color:var(--ink);font-weight:650}
 .body em,.lede em,.detail em,.sheet em{font-style:italic}
@@ -329,7 +357,8 @@ table.cost tr:last-child td{border-bottom:0}
 dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:12px 0 0;font-size:14px}
 dt{color:var(--muted);font-family:var(--body)}
 dd{margin:0;color:var(--ink);font-variant-numeric:tabular-nums;font-size:13.5px}
-@media (max-width:720px){.arg>summary,.arg>.sum{display:flex;flex-wrap:wrap}.body{padding-left:22px}}
+@media (max-width:720px){.arg>summary,.arg>.sum{display:flex;flex-wrap:wrap}.body,.args.names .body{padding-left:22px}.args>.head{display:none}}
+@media (max-width:860px){.arg>summary::after,.args:has(>details.arg)>.arg.flat>.sum::after{top:21px;right:18px}.arg>summary,.arg>.sum{padding-right:44px}}
 
 /* What an argument is written as and whether it is needed: the type, which opens what that type
    means, then whether it is required, then whether a variable can drive it. */
@@ -393,7 +422,7 @@ button.tag.var:hover{color:var(--accent-ink);background:transparent;text-decorat
   body.navopen{overflow:hidden}
   main{padding:28px 16px 96px;width:100%}
   h2{font-size:30px}
-  .type h2{font-size:28px}
+  main>.page>h2,article.guide>h2{font-size:28px}
   .lede,article.guide p.lede{font-size:18px}
   article.guide p{font-size:16px}
   .arg>summary,.arg>.sum{padding:14px 16px}

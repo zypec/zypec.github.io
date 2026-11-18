@@ -66,6 +66,31 @@ Wiki.start();
 
 A wiki with nothing extra just calls `Wiki.start()`.
 
+## Writing a wiki page
+
+A reader comes to a wiki with one question and leaves when it is answered, so a page is laid out to be
+scanned before it is read, and each kind of content has one shape, the same on every site:
+
+- **Anything looked up is a list of rows** (`.args`, each `.arg` a row): settings, arguments, commands,
+  permissions, fields, files. A row names the thing (`.k`, in the code face, or `.k.w` for words), says
+  what it is in one line (`.s`), carries its tags at the end (`.meta`: required, a type, `.tag.def` for the
+  default) and opens on the rest when there is a rest (`details.arg`; `.arg.flat` does not open). A
+  `.head` row above the first names the columns, and `.args.names` gives long names a third of the row.
+- **A table only to compare**: values read across three or more columns. Two columns is a list of rows.
+- **A tile only to go somewhere**, never a list of facts.
+- **The answer first**: the lede says what the page is for, a row's line is the answer and its inside the
+  details, and bold marks the one word a reader scans for, never a sentence.
+- Every page has its group's crumb (`.crumb`) above a title in the display face, and starts at the same
+  distance from the contents. `#page/heading` opens a guide at a heading, and `#page/<id>` at the row with
+  that id, opened and outlined for a moment.
+
+## To do
+
+- **Izomap's wiki** is not on the rule above yet. Its config reference is already rows, but its guides hold
+  19 Markdown tables: the two-column ones (a key and what it does, a slot and what it holds) become rows,
+  drawn by its generator the way `.args` expects, and a table stays only where values are compared.
+  Nothing in the kit has to change for it.
+
 ## Other notes
 
 - A front page meant to be edited without HTML keeps its text in a `content.md` next to it and renders it

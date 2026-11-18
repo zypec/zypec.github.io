@@ -468,7 +468,7 @@ const Wiki = (() => {
 
   function renderGuide(guide) {
     main.innerHTML = `<div class="guidewrap"><article class="guide">`
-      + (listed(guide) && guide.group ? `<p class="crumb">${esc(guide.group)}</p>` : '')
+      + (listed(guide) ? `<p class="crumb">${esc(guide.group || SITE.order[0])}</p>` : '')
       + `${guide.html}${pager(guide.id)}</article></div>`;
     consoles();
     contents(main.querySelector('.guidewrap'));
@@ -503,8 +503,13 @@ const Wiki = (() => {
         const heading = current.slice(at + 1);
         current = current.slice(0, at);
         draw();
-        const target = main.querySelector(`article.guide h3[data-heading="${CSS.escape(heading)}"]`);
-        if (target) requestAnimationFrame(() => target.scrollIntoView({block: 'start'}));
+        const target = main.querySelector(`article.guide h3[data-heading="${CSS.escape(heading)}"]`)
+          || main.querySelector(`article.guide #${CSS.escape(heading)}`);
+        if (target && target.tagName === 'DETAILS') target.open = true;
+        if (target) requestAnimationFrame(() => {
+          target.scrollIntoView({block: target.tagName === 'H3' ? 'start' : 'center'});
+          if (target.tagName !== 'H3') target.classList.add('flash');
+        });
         return;
       }
     }
