@@ -417,6 +417,9 @@ const Wiki = (() => {
       .map(pair => pair.entry);
   }
 
+  /** An arrow drawn as a line, not a character: a font draws an arrow at its own size and weight. */
+  const arrow = way => `<svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${way === 'left' ? '<path d="M13 8H3"/><path d="m7 4-4 4 4 4"/>' : '<path d="M3 8h10"/><path d="m9 4 4 4-4 4"/>'}</svg>`;
+
   /** The previous and next page, at the foot of a page. */
   function pager(id) {
     const all = sequence();
@@ -424,7 +427,7 @@ const Wiki = (() => {
     if (at < 0) return '';
 
     const link = (entry, which) => entry
-      ? `<a class="${which}" href="#${esc(entry.id)}" data-t="${esc(entry.id)}"><small>${which === 'prev' ? '← Previous' : 'Next →'}</small>`
+      ? `<a class="${which}" href="#${esc(entry.id)}" data-t="${esc(entry.id)}"><small>${which === 'prev' ? arrow('left') + 'Previous' : 'Next' + arrow('right')}</small>`
         + `<b class="${entry.guide ? '' : 'mono'}">${esc(entry.label)}</b></a>`
       : '';
     const before = all[at - 1], after = all[at + 1];
@@ -726,7 +729,7 @@ const Wiki = (() => {
     set current(id) { current = id; },
     get filter() { return filter; },
     main, nav, sheet,
-    esc, inline, pageOf, guideOf, guideMatches,
+    esc, inline, pageOf, guideOf, guideMatches, arrow,
     go, wire, render, highlight, codeBlock, consoles, contents, pager, sequence,
     explain, closeSheet, tile, button, gallery, renderGuide, closeNav, showing,
     register, start,
