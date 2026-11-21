@@ -459,14 +459,31 @@ const Wiki = (() => {
       headings[+link.dataset.at].scrollIntoView({behavior: 'smooth', block: 'start'});
     });
 
-    const seen = new Set();
-    readingWatch = new IntersectionObserver(found => {
-      for (const entry of found) entry.isIntersecting ? seen.add(entry.target) : seen.delete(entry.target);
-      const first = headings.findIndex(heading => seen.has(heading));
-      if (first >= 0) mark(first);
-    }, {rootMargin: '-80px 0px -60% 0px'});
-    headings.forEach(heading => readingWatch.observe(heading));
-    mark(0);
+    /**
+     * The heading being read is the last one above a line across the page. The line sits under the
+     * bar, and over the last screen of the page it slides down to the foot of the window with the
+     * scroll, so the short sections at the end are each marked in turn and the last one is marked at
+     * the bottom: a line that stayed put never reached a heading the page could not scroll up to it.
+     */
+    const read = () => {
+      const top = 120;
+      const left = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+      const slide = Math.max(0, Math.min(1, 1 - left / window.innerHeight));
+      const line = top + slide * (window.innerHeight - top - 48);
+      let at = 0;
+      headings.forEach((heading, index) => { if (heading.getBoundingClientRect().top <= line) at = index; });
+      mark(at);
+    };
+    let queued = false;
+    const scrolled = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; read(); });
+    };
+    window.addEventListener('scroll', scrolled, {passive: true});
+    window.addEventListener('resize', scrolled);
+    readingWatch = {disconnect: () => { window.removeEventListener('scroll', scrolled); window.removeEventListener('resize', scrolled); }};
+    read();
   }
 
   function renderGuide(guide) {

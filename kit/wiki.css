@@ -509,7 +509,9 @@ svg.arrow{width:13px;height:13px;flex:none}
 .toc p{margin:0 0 10px;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.02em}
 .toc a{display:block;border:0;color:var(--ink-2);padding:4px 0;transition:color .12s}
 .toc a:hover{color:var(--ink)}
-.toc a.on{color:var(--accent-ink);font-weight:600}
+/* The heading being read is drawn heavier with a stroke rather than a bolder weight: a bold one is
+   wider, and a heading that just fit on one line broke onto two when it was reached. */
+.toc a.on{color:var(--accent-ink);-webkit-text-stroke:.45px currentColor}
 @media (max-width:1360px){.guidewrap{display:block}.toc{display:none}}
 details.legend{margin:28px 0 0;color:var(--ink-2);font-size:14.5px}
 details.legend summary{cursor:pointer;color:var(--muted)}
