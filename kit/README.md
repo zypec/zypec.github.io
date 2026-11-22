@@ -34,12 +34,14 @@ Every page uses the same bar so buttons don't move between pages.
    Portfolio**, then the **theme switch**, always last. Gallery, a section of the front page, comes first
    so the capsule scrolling down to it from the top does not leap over Docs.
 3. **Same links on every page of a site** (front page, statistics page, wiki), and every link points to
-   the same place from every page (Gallery from the statistics page is `../#gallery`). The current page
+   the same place from every page (Gallery from the statistics page is `../#gallery`). The one exception
+   is the wiki, which leaves Gallery out of its `links`: the gallery is a section of the front page, and
+   the wiki already leads there through Home. The current page
    stays in the bar, marked by `class="on"` (`aria-current="page"` in the wiki). `island.js` draws a soft
    capsule behind the link of the bar the reader is on and slides it as they move: the link of the section
    scrolled to (`#gallery`, `#projects`), the `on` link on a page of its own, and in the wiki whatever
-   `Island.mark(part)` names (Home, or Feedback on the feedback page). The site's name on the left is never
-   marked: at the top of a front page, before any section is reached, there is no capsule. Coming from
+   `Island.mark(part)` names (Feedback on the feedback page, nothing on its other pages: Home leads away to
+   the front page). The site's name on the left is never marked: at the top of a front page, before any section is reached, there is no capsule. Coming from
    another page it starts behind the link that page had marked. In the wiki, Docs is replaced by **Home**
    (the project's front page), and the wiki's name in the bar opens the wiki's home.
 4. **Portfolio** is on every page except the portfolio, whose bar lists its sections: **Projects, Contact**.
@@ -52,8 +54,8 @@ Current bars:
 | Site | Bar |
 |---|---|
 | Portfolio | Projects, Contact, theme |
-| Particles+ | Gallery, Docs, Statistics, Feedback, Portfolio, theme |
-| Izomap | Gallery, Docs, Portfolio, theme |
+| Particles+ | Gallery, Docs, Statistics, Feedback, Portfolio, theme (the wiki: Home, Statistics, Feedback, Portfolio, theme) |
+| Izomap | Gallery, Docs, Portfolio, theme (the wiki: Home, Portfolio, theme) |
 | MetroCrafter | Portfolio, theme |
 
 Front and statistics pages write the bar as `<header><a class="home">…</a><nav>…links…<button id="theme">`.
