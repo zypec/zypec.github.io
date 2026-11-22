@@ -87,6 +87,11 @@ header.morphing>*{flex-shrink:0}
    was cut off. */
 header .riding{z-index:2}
 header.morphing nav{overflow:visible}
+/* The page being read, marked by a soft capsule behind its part of the island (island.js): darker than
+   the glass, as round as the links, sliding from part to part as the reader moves on. */
+header .islandmark{position:absolute;left:0;top:50%;z-index:-1;border-radius:999px;pointer-events:none;opacity:0;
+  background:color-mix(in srgb,var(--ink) 9%,transparent);
+  transition:transform .5s var(--spring),width .5s var(--spring),height .3s,margin-top .3s,opacity .25s}
 header .home{display:flex;align-items:center;gap:10px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
 header .home:hover{text-decoration:none}
 header .home svg{width:16px;height:16px}

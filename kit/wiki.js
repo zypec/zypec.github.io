@@ -158,6 +158,18 @@ const Wiki = (() => {
     if (!now) return;
     const title = current === HOME ? null : main.querySelector('h2');
     now.textContent = title ? title.textContent.trim() : '';
+    markNow();
+  }
+
+  /**
+   * The part of the island the page on screen is: the bar's link to it where the bar has one (the
+   * feedback page), the wiki's name otherwise. The wiki's pages are not sections of one page, so the
+   * island is told rather than left to find it.
+   */
+  function markNow() {
+    if (typeof Island === 'undefined' || !Island.mark) return;
+    const link = [...document.querySelectorAll('header .links a[data-t]')].find(a => pageOf(a.dataset.t) === pageOf(current));
+    Island.mark(link || document.getElementById('brand'));
   }
 
   const hashed = () => location.hash ? decodeURIComponent(location.hash.slice(1)) : null;
@@ -735,6 +747,7 @@ const Wiki = (() => {
       bar.querySelectorAll('a[data-t]').forEach(a => a.onclick = e => { e.preventDefault(); go(a.dataset.t); });
       document.getElementById('themed').before(bar);
     }
+    markNow();
 
     current = hashed() || HOME;
     render();

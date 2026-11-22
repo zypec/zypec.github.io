@@ -9,6 +9,9 @@
  * The size it springs to is taken once the page's fonts are in: measured before, the brand's own
  * letters (a web font) widened it once the morph was over, a jump at the end.
  *
+ * A capsule behind one of its parts marks the page or the section being read, and slides from part to
+ * part as the reader moves on (Mark, below).
+ *
  * A view transition would do this in some browsers and not others, and one across pages was dropped
  * by Chrome whenever the new page had work to do before it first drew, which the wiki always has.
  * This is the same everywhere, and with reduced motion it does nothing.
@@ -25,18 +28,33 @@ const Island = (() => {
    */
   const said = part => part.matches('#theme, #themed') ? '#theme' : part.textContent.trim().replace(/\s+/g, ' ');
 
-  /** The parts of the island, its links taken one by one rather than as the row holding them. */
+  /**
+   * The parts of the island, its links taken one by one rather than as the row holding them. The mark
+   * behind the page being read is not one: it is drawn behind them, not held by the island.
+   */
   function parts(island) {
-    return [...island.children].flatMap(part => part.matches('nav, .links') ? [...part.children] : [part]);
+    return [...island.children].filter(part => !part.matches('.islandmark'))
+      .flatMap(part => part.matches('nav, .links') ? [...part.children] : [part]);
   }
 
-  /** The island's size now, and what it holds, to morph from after something changes it. */
+  /**
+   * The island's size now, what it holds and which of it is marked as the page being read, to morph
+   * from after something changes it.
+   */
   function measure() {
     const island = bar();
     if (!island) return null;
     const box = island.getBoundingClientRect();
-    return {width: box.width, height: box.height, held: parts(island).map(said)};
+    const marked = current();
+    return {width: box.width, height: box.height, held: parts(island).map(said), mark: marked ? said(marked) : null};
   }
+
+  /**
+   * Scrolled into the page, the island draws in a little; back at the top it is full size again. Set
+   * before a morph measures where it is going, too: a page that opens at the top while the last one
+   * was scrolled took the island's drawn-in height as its size, and grew again once the morph was over.
+   */
+  const scrolled = () => document.documentElement.classList.toggle('scrolled', scrollY > 24);
 
   /**
    * The island's two ends, the brand and the theme switch, which ride its edges while it changes size.
@@ -97,13 +115,34 @@ const Island = (() => {
   }
 
   /**
+   * The morph under way, so one that starts before it is over takes over from it rather than running
+   * under it: left to finish, the first took the morphing look off the island half way through the
+   * second, and the size the second was going to had been measured with the first still pulling at
+   * it, so the island jumped once both were done.
+   */
+  let morphs = 0, running = [];
+
+  function stop(island) {
+    for (const animation of running) animation.cancel();
+    running = [];
+    island.classList.remove('morphing');
+  }
+
+  /**
    * Grows or shrinks the island from the size it was to the size it is, and brings into focus the
-   * parts it did not hold before.
+   * parts it did not hold before. The size it goes to is measured with its own transitions off, as
+   * it will stand once they are over.
    */
   function morph(from) {
     const island = bar();
-    if (!island || !from || still()) return;
+    if (!island || !from || still()) return null;
+    const turn = ++morphs;
+    stop(island);
+    island.style.transition = 'none';
+    scrolled();
     const to = island.getBoundingClientRect();
+    island.getBoundingClientRect();
+    island.style.transition = '';
     const held = new Set(from.held || []);
     const all = parts(island);
     const fresh = new Set(all.filter(part => !held.has(said(part)) && part.textContent.trim()));
@@ -111,10 +150,11 @@ const Island = (() => {
     const dw = to.width - from.width, dh = to.height - from.height;
     if (Math.abs(dw) < 1 && Math.abs(dh) < 1) {
       for (const part of fresh)
-        part.animate([{opacity: 0, filter: 'blur(5px)'}, {opacity: 1, filter: 'blur(0)'}],
-          {duration: 420, delay: 120, easing: 'ease-out', fill: 'backwards'});
+        running.push(part.animate([{opacity: 0, filter: 'blur(5px)'}, {opacity: 1, filter: 'blur(0)'}],
+          {duration: 420, delay: 120, easing: 'ease-out', fill: 'backwards'}));
       if (!island.style.width) for (const [part] of ends(island)) land(part);
-      return;
+      Mark.from(from.mark);
+      return null;
     }
     // Where each end comes to rest, against where morphing lays it out at the island's final size:
     // morphing, the links are laid out whole, while at rest they scroll inside a narrow island and
@@ -141,6 +181,7 @@ const Island = (() => {
     const offsets = [0, 0.42, 0.74, 1];
     const timing = {duration: 720, easing: 'cubic-bezier(.33,.8,.3,1)'};
     const growing = island.animate(offsets.map((offset, at) => ({offset, width: widths[at] + 'px', height: heights[at] + 'px'})), timing);
+    running.push(growing);
     // What the island holds stays where it ends while the island grows round it, from the middle;
     // the brand and the theme button, its two ends, ride its edges instead, so neither is cut off by
     // an edge on the way and both are where the eye expects them. They are moved by layout, as the
@@ -153,6 +194,7 @@ const Island = (() => {
       ride(part, side, to.width, from.width);
       part.style.left = parseFloat(part.style.left) + shift + 'px';
       const riding = part.animate(offsets.map((offset, at) => ({offset, left: shift + side * (to.width - widths[at]) / 2 + 'px'})), timing);
+      running.push(riding);
       rides.set(part, riding);
       riding.finished.finally(() => { if (rides.get(part) === riding) land(part); });
     }
@@ -168,8 +210,8 @@ const Island = (() => {
     for (const part of all) {
       if (both.some(([end]) => end === part)) {
         if (fresh.has(part))
-          part.animate([{opacity: 0, filter: 'blur(5px)'}, {opacity: 1, filter: 'blur(0)'}],
-            {duration: 420, delay: 120, easing: 'ease-out', fill: 'backwards'});
+          running.push(part.animate([{opacity: 0, filter: 'blur(5px)'}, {opacity: 1, filter: 'blur(0)'}],
+            {duration: 420, delay: 120, easing: 'ease-out', fill: 'backwards'}));
         continue;
       }
       const at = part.getBoundingClientRect();
@@ -177,10 +219,16 @@ const Island = (() => {
       const start = Math.min(0.9, Math.max(clear, fresh.has(part) ? 0.17 : 0));
       if (start <= 0) continue;
       const blur = fresh.has(part) ? 'blur(5px)' : 'blur(0)';
-      part.animate([{offset: 0, opacity: 0, filter: blur}, {offset: start, opacity: 0, filter: blur},
-        {offset: Math.min(1, start + (fresh.has(part) ? 0.35 : 0.14)), opacity: 1, filter: 'blur(0)'}], timing);
+      running.push(part.animate([{offset: 0, opacity: 0, filter: blur}, {offset: start, opacity: 0, filter: blur},
+        {offset: Math.min(1, start + (fresh.has(part) ? 0.35 : 0.14)), opacity: 1, filter: 'blur(0)'}], timing));
     }
-    growing.finished.finally(() => island.classList.remove('morphing'));
+    Mark.follow(growing, from.mark);
+    growing.finished.then(() => {
+      if (turn !== morphs) return;
+      island.classList.remove('morphing');
+      running = [];
+    }, () => {});
+    return growing;
   }
 
   /** A change of the page drawn as the island morphing to fit whatever the change put in it. */
@@ -199,15 +247,188 @@ const Island = (() => {
     try { if (size) sessionStorage.setItem(KEY, JSON.stringify(Object.assign(size, {at: Date.now()}))); } catch (blocked) {}
   });
 
+  /**
+   * How long the size the last page left stays worth morphing from. The wiki has a good deal to read
+   * before it draws, and over a slow line it took longer than a few seconds, so its island opened at
+   * its own size at once.
+   */
+  const FRESH = 12000;
+
+  function leftBehind() {
+    try {
+      const left = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+      sessionStorage.removeItem(KEY);
+      return left && Date.now() - left.at < FRESH ? left : null;
+    } catch (blocked) {
+      return null;
+    }
+  }
+
+  // A page the browser kept and brings back as it was (the back button) runs none of this again, so
+  // its island stood at its own size at once, the one change of page that jumped. It morphs from the
+  // size of the page it comes back from like any other.
+  addEventListener('pageshow', event => {
+    if (!event.persisted) return;
+    const left = leftBehind();
+    if (left) morph(left);
+    else Mark.place(true);
+  });
+
+  /**
+   * The page being read, marked by a soft capsule behind its part of the island: the site's name on
+   * its front page, the link of the section scrolled to, the link marked {@code on} on a page of its
+   * own, or what the page names with {@link Island.mark} (the wiki, whose pages are not sections).
+   * Moving to another page or section it slides from the part it was behind to the new one, and
+   * coming from another page it starts behind the part that page had marked, if this island has it.
+   */
+  let named = undefined;
+
+  const page = path => path.replace(/index\.html$/, '');
+
+  function same(link) {
+    const url = new URL(link.href, location.href);
+    return url.origin === location.origin && page(url.pathname) === page(location.pathname) ? url : null;
+  }
+
+  function current() {
+    const island = bar();
+    if (!island) return null;
+    if (named !== undefined) return named;
+    const links = [...island.querySelectorAll('a[href]')];
+    const atFoot = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+    let read = null, top = -Infinity;
+    for (const link of links) {
+      const url = same(link);
+      if (!url || !url.hash) continue;
+      const section = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      if (!section) continue;
+      const at = section.getBoundingClientRect().top;
+      if ((at <= innerHeight * 0.35 || (atFoot && at < innerHeight)) && at > top) { read = link; top = at; }
+    }
+    if (read) return read;
+    const on = island.querySelector('a.on, a[aria-current="page"]');
+    if (on) return on;
+    return links.find(link => { const url = same(link); return url && !url.hash; }) || null;
+  }
+
+  const Mark = (() => {
+    let mark = null, shown = null, following = false, follows = 0;
+
+    function element() {
+      const island = bar();
+      if (!island) return null;
+      if (!mark || !mark.isConnected) {
+        mark = document.createElement('span');
+        mark.className = 'islandmark';
+        mark.setAttribute('aria-hidden', 'true');
+        island.prepend(mark);
+      }
+      return mark;
+    }
+
+    /**
+     * The capsule a part is marked by, in the island's own frame: a link's own pill, the name widened to
+     * one by no more than half the space between it and the next part, so the two never touch. Its
+     * height is placed as a share of the island's, so it stays centered on the part while the island
+     * draws in, and on its own row where a phone lays the island out in two.
+     */
+    function box(part) {
+      const island = bar(), at = part.getBoundingClientRect(), frame = island.getBoundingClientRect();
+      if (!at.width) return null;
+      const sized = [...island.querySelectorAll('nav a, .links a, #theme, #themed')].find(one => one.getBoundingClientRect().height);
+      const height = Math.max(at.height, sized ? sized.getBoundingClientRect().height : 40);
+      const gap = parseFloat(getComputedStyle(island).columnGap) || 24;
+      const pad = part.matches('nav a, .links a') ? 0 : Math.min(12, gap / 2);
+      return {left: at.left - frame.left - pad, width: at.width + 2 * pad, height,
+        middle: (at.top - frame.top + at.height / 2) / frame.height * 100};
+    }
+
+    function draw(part, instant) {
+      const capsule = element();
+      if (!capsule) return;
+      const shape = part ? box(part) : null;
+      if (instant) capsule.style.transition = 'none';
+      capsule.style.opacity = shape ? '1' : '0';
+      if (shape) Object.assign(capsule.style, {width: shape.width + 'px', height: shape.height + 'px', top: shape.middle + '%',
+        marginTop: -shape.height / 2 + 'px', transform: `translateX(${shape.left}px)`});
+      if (instant) { capsule.getBoundingClientRect(); capsule.style.transition = ''; }
+      shown = part;
+    }
+
+    /**
+     * Puts the capsule where it belongs, sliding there unless {@code instant}. A part a phone hides (the
+     * gallery's link) leaves it on the island's name rather than on nothing.
+     */
+    function place(instant) {
+      if (following) return;
+      draw(shownFor(current()), instant);
+    }
+
+    function shownFor(part) {
+      const island = bar();
+      return part && !part.getBoundingClientRect().width && island ? parts(island)[0] : part;
+    }
+
+    /** The part the last island had marked, in this one. */
+    function byText(text) {
+      const island = bar();
+      return text && island ? parts(island).find(part => said(part) === text && part.matches('a, h1')) || null : null;
+    }
+
+    /**
+     * Rides with the island while it changes size, behind the part the old island had marked, and slides
+     * to the part this page marks once the island has settled.
+     */
+    function follow(growing, text) {
+      const start = shownFor(byText(text) || current());
+      const turn = ++follows;
+      following = true;
+      const step = () => {
+        if (turn !== follows) return;
+        draw(start, true);
+        requestAnimationFrame(step);
+      };
+      step();
+      // A frame after the island has settled, once its ends have landed and it has lost its morphing
+      // look: measured the moment the morph was over, the name was still riding the edge and the
+      // capsule was left beside it.
+      growing.finished.then(() => requestAnimationFrame(() => {
+        if (turn !== follows) return;
+        follows++;
+        following = false;
+        place();
+      }), () => {});
+    }
+
+    /** Slides from the part the island had marked before a change in place to the one marked now. */
+    function from(text) {
+      follows++;
+      following = false;
+      const start = byText(text);
+      if (start && start !== shownFor(current())) {
+        draw(start, true);
+        requestAnimationFrame(() => place());
+      } else place(true);
+    }
+
+    return {place, follow, from, get shown() { return shown; }};
+  })();
+
+  /**
+   * Names the part of the island the page being read is, or with no part the island's name; with
+   * {@code undefined} it goes back to finding it by itself.
+   */
+  function markPart(part) {
+    const island = bar();
+    named = part === undefined ? undefined : part || (island ? parts(island)[0] : null);
+    Mark.place();
+  }
+
   // Read right after the bar, before the page first draws: the island is held at the size the last
   // page left it, and morphs to its own once everything that fills it (the wiki's links) is in.
-  let left = null;
-  try {
-    left = JSON.parse(sessionStorage.getItem(KEY) || 'null');
-    sessionStorage.removeItem(KEY);
-  } catch (blocked) {}
+  const left = leftBehind();
   const island = bar();
-  if (island && left && Date.now() - left.at < 4000 && !still()) {
+  if (island && left && !still()) {
     island.classList.add('morphing');
     island.style.width = left.width + 'px';
     island.style.height = left.height + 'px';
@@ -216,8 +437,13 @@ const Island = (() => {
     const held = new Set(left.held || []);
     for (const part of parts(island)) if (!held.has(said(part))) part.style.opacity = '0';
     for (const [part, side] of ends(island)) ride(part, side, 0, 0);
+    // Pinned again whenever what the island holds changes, before that change is drawn: pinned only
+    // once a frame, a page's name the wiki wrote in showed for a frame before it was hidden to come
+    // into focus, so it seemed to arrive twice.
+    const watch = new MutationObserver(() => { if (island.style.width) pin(island, held); });
+    watch.observe(island, {childList: true, subtree: true, characterData: true});
     const holding = () => {
-      if (!island.style.width) return;
+      if (!island.style.width) { watch.disconnect(); return; }
       pin(island, held);
       requestAnimationFrame(holding);
     };
@@ -229,17 +455,31 @@ const Island = (() => {
       island.style.transition = 'none';
       island.style.width = island.style.height = '';
       island.classList.remove('morphing');
-      morph(left);
+      if (!morph(left)) Mark.place(true);
       island.getBoundingClientRect();
       island.style.transition = '';
     }));
     if (document.readyState === 'loading') addEventListener('DOMContentLoaded', arrive, {once: true});
     else arrive();
+  } else {
+    const first = () => fonts().then(() => requestAnimationFrame(() => Mark.place(true)));
+    if (document.readyState === 'loading') addEventListener('DOMContentLoaded', first, {once: true});
+    else first();
   }
 
-  // Scrolled into the page, the island draws in a little; back at the top it is full size again.
-  const scrolled = () => document.documentElement.classList.toggle('scrolled', scrollY > 24);
-  addEventListener('scroll', scrolled, {passive: true});
+  // The mark follows the section being read as the page scrolls, once a frame at most.
+  let queued = false;
+  addEventListener('scroll', () => {
+    scrolled();
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      Mark.place();
+    });
+  }, {passive: true});
+  addEventListener('resize', () => Mark.place(true));
+  addEventListener('load', () => Mark.place(true));
   scrolled();
 
   // Links too many for a narrow island scroll inside it; the fade at the end says there are more,
@@ -250,11 +490,12 @@ const Island = (() => {
     links.classList.toggle('overflows', links.scrollWidth - links.clientWidth - links.scrollLeft > 2);
   };
   if (links) {
+    links.addEventListener('scroll', () => Mark.place(true), {passive: true});
     links.addEventListener('scroll', overflows, {passive: true});
     addEventListener('resize', overflows);
     addEventListener('load', overflows);
     overflows();
   }
 
-  return {measure, morph, around};
+  return {measure, morph, around, mark: markPart};
 })();

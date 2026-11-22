@@ -10,7 +10,7 @@ site, so the sites don't depend on each other at runtime.
 | `wiki.css` | Styles for the wiki shell. |
 | `front.css`, `theme.js` | Styles and theme switch for front pages, statistics pages and the portfolio. |
 | `content.js` | Renders a page from Markdown: `<main data-content="content.md">`, with `::: kind` blocks that the page defines. The format is documented at the top of the file. |
-| `island.js` | The top bar. It animates between pages and shrinks when the page is scrolled. Load it right after `</header>` on every page. |
+| `island.js` | The top bar. It animates between pages, shrinks when the page is scrolled and marks the page or section being read. Load it right after `</header>` on every page. |
 | `lightbox.js` | Opens gallery images over the page with previous/next/close buttons, arrow keys and Escape: `Lightbox.wire('.gallery a')`. Styles are in `front.css`. |
 
 ## Colors
@@ -34,9 +34,13 @@ Every page uses the same bar so buttons don't move between pages.
    Portfolio**, then the **theme switch**, always last.
 3. **Same links on every page of a site** (front page, statistics page, wiki), and every link points to
    the same place from every page (Gallery from the statistics page is `../#gallery`). The current page
-   stays in the bar. It can have `class="on"` (`aria-current="page"` in the wiki) but looks like the other
-   links. In the wiki, Docs is replaced by **Home** (the project's front page), and the wiki's name in the
-   bar opens the wiki's home.
+   stays in the bar, marked by `class="on"` (`aria-current="page"` in the wiki). `island.js` draws a soft
+   capsule behind the part of the bar the reader is on and slides it as they move: the site's name at the
+   top of a front page, the link of the section scrolled to (`#gallery`, `#projects`), the `on` link on a
+   page of its own, and in the wiki whatever `Island.mark(part)` names (the wiki's name, or Feedback on the
+   feedback page). Coming from another page it starts behind the part that page had marked. In the wiki,
+   Docs is replaced by **Home** (the project's front page), and the wiki's name in the bar opens the
+   wiki's home.
 4. **Portfolio** is on every page except the portfolio, whose bar lists its sections: **Projects, Contact**.
 5. **On phones** (640px and narrower) the links with `class="roomy"` are hidden: always **Gallery** and
    **Feedback**. Docs, Statistics and Portfolio stay. The theme switch has the same size and spacing on

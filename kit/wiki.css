@@ -96,6 +96,11 @@ header.morphing>*{flex-shrink:0}
 /* An end of the island rides its edge in its own look; what it would pass over is kept unseen by
    island.js until the end has gone by. */
 header .riding{z-index:2}
+/* The page being read, marked by a soft capsule behind its part of the island (island.js): darker than
+   the glass, as round as the links, sliding from part to part as the reader moves on. */
+header .islandmark{position:absolute;left:0;top:50%;z-index:-1;border-radius:999px;pointer-events:none;opacity:0;
+  background:color-mix(in srgb,var(--ink) 9%,transparent);
+  transition:transform .5s var(--spring),width .5s var(--spring),height .3s,margin-top .3s,opacity .25s}
 /* The page the reader is on, said inside the island and changed in place when another opens. */
 header .now{max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);font-size:14px;
   font-weight:500;padding-left:14px;border-left:1px solid var(--line-2)}
