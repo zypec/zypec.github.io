@@ -66,9 +66,10 @@ const Wiki = (() => {
    * The site's links as the wiki's bar shows them: the wiki's own (Docs) is where the reader is, so in
    * its place the bar offers the way back to the project's front page.
    */
-  const homeLinks = links => links.map(link => link.on && SITE.front ? {href: SITE.front, label: 'Home'} : link);
+  const homeLinks = links => links.map(link => link.on && SITE.front ? {href: SITE.front, label: 'Home', home: true} : link);
   const barLinks = links => links.map(link => `<a href="${esc(link.href)}"`
     + (String(link.href).startsWith('#') ? ` data-t="${esc(link.href.slice(1))}"` : '')
+    + (link.home ? ' data-home' : '')
     + `${link.on ? ' class="on" aria-current="page"' : link.roomy ? ' class="roomy"' : ''}>${esc(link.label)}</a>`).join('');
 
   /** The page an address is on: `bugs/12` is on `bugs`, and the contents mark that entry for it. */
@@ -163,13 +164,14 @@ const Wiki = (() => {
 
   /**
    * The part of the island the page on screen is: the bar's link to it where the bar has one (the
-   * feedback page), the wiki's name otherwise. The wiki's pages are not sections of one page, so the
-   * island is told rather than left to find it.
+   * feedback page), Home otherwise, which stands where the front page's Docs does. The wiki's name is
+   * never marked. The wiki's pages are not sections of one page, so the island is told rather than
+   * left to find it.
    */
   function markNow() {
     if (typeof Island === 'undefined' || !Island.mark) return;
     const link = [...document.querySelectorAll('header .links a[data-t]')].find(a => pageOf(a.dataset.t) === pageOf(current));
-    Island.mark(link || document.getElementById('brand'));
+    Island.mark(link || document.querySelector('header .links a[data-home]'));
   }
 
   const hashed = () => location.hash ? decodeURIComponent(location.hash.slice(1)) : null;

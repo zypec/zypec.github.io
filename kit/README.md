@@ -30,17 +30,18 @@ doesn't work with your accent, redefine `--on-accent` too.
 Every page uses the same bar so buttons don't move between pages.
 
 1. **Left:** the site's logo, linking to the site's front page (the portfolio links to itself).
-2. **Right, in this order**, only the ones the site has: **Docs, Gallery, Statistics, Feedback,
-   Portfolio**, then the **theme switch**, always last.
+2. **Right, in this order**, only the ones the site has: **Gallery, Docs, Statistics, Feedback,
+   Portfolio**, then the **theme switch**, always last. Gallery, a section of the front page, comes first
+   so the capsule scrolling down to it from the top does not leap over Docs.
 3. **Same links on every page of a site** (front page, statistics page, wiki), and every link points to
    the same place from every page (Gallery from the statistics page is `../#gallery`). The current page
    stays in the bar, marked by `class="on"` (`aria-current="page"` in the wiki). `island.js` draws a soft
-   capsule behind the part of the bar the reader is on and slides it as they move: the site's name at the
-   top of a front page, the link of the section scrolled to (`#gallery`, `#projects`), the `on` link on a
-   page of its own, and in the wiki whatever `Island.mark(part)` names (the wiki's name, or Feedback on the
-   feedback page). Coming from another page it starts behind the part that page had marked. In the wiki,
-   Docs is replaced by **Home** (the project's front page), and the wiki's name in the bar opens the
-   wiki's home.
+   capsule behind the link of the bar the reader is on and slides it as they move: the link of the section
+   scrolled to (`#gallery`, `#projects`), the `on` link on a page of its own, and in the wiki whatever
+   `Island.mark(part)` names (Home, or Feedback on the feedback page). The site's name on the left is never
+   marked: at the top of a front page, before any section is reached, there is no capsule. Coming from
+   another page it starts behind the link that page had marked. In the wiki, Docs is replaced by **Home**
+   (the project's front page), and the wiki's name in the bar opens the wiki's home.
 4. **Portfolio** is on every page except the portfolio, whose bar lists its sections: **Projects, Contact**.
 5. **On phones** (640px and narrower) the links with `class="roomy"` are hidden: always **Gallery** and
    **Feedback**. Docs, Statistics and Portfolio stay. The theme switch has the same size and spacing on
@@ -51,8 +52,8 @@ Current bars:
 | Site | Bar |
 |---|---|
 | Portfolio | Projects, Contact, theme |
-| Particles+ | Docs, Gallery, Statistics, Feedback, Portfolio, theme |
-| Izomap | Docs, Gallery, Portfolio, theme |
+| Particles+ | Gallery, Docs, Statistics, Feedback, Portfolio, theme |
+| Izomap | Gallery, Docs, Portfolio, theme |
 | MetroCrafter | Portfolio, theme |
 
 Front and statistics pages write the bar as `<header><a class="home">…</a><nav>…links…<button id="theme">`.

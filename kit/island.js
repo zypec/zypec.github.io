@@ -9,8 +9,8 @@
  * The size it springs to is taken once the page's fonts are in: measured before, the brand's own
  * letters (a web font) widened it once the morph was over, a jump at the end.
  *
- * A capsule behind one of its parts marks the page or the section being read, and slides from part to
- * part as the reader moves on (Mark, below).
+ * A capsule behind one of its links marks the page or the section being read, and slides from link to
+ * link as the reader moves on (Mark, below). The site's name is never marked.
  *
  * A view transition would do this in some browsers and not others, and one across pages was dropped
  * by Chrome whenever the new page had work to do before it first drew, which the wiki always has.
@@ -275,13 +275,20 @@ const Island = (() => {
   });
 
   /**
-   * The page being read, marked by a soft capsule behind its part of the island: the site's name on
-   * its front page, the link of the section scrolled to, the link marked {@code on} on a page of its
-   * own, or what the page names with {@link Island.mark} (the wiki, whose pages are not sections).
-   * Moving to another page or section it slides from the part it was behind to the new one, and
-   * coming from another page it starts behind the part that page had marked, if this island has it.
+   * The page being read, marked by a soft capsule behind its link in the island: the link of the
+   * section scrolled to, the link marked {@code on} on a page of its own, or what the page names with
+   * {@link Island.mark} (the wiki, whose pages are not sections). Moving to another page or section it
+   * slides from the link it was behind to the new one, and coming from another page it starts behind
+   * the link that page had marked, if this island has it.
+   *
+   * The site's name, at the island's left end, is never marked: at the top of a front page, where no
+   * section is being read yet, the capsule is not drawn at all. Marked, the name read as one more
+   * link, and the capsule leapt the length of the island the moment the page was scrolled.
    */
   let named = undefined;
+
+  /** The site's name, the island's first part. */
+  const brand = island => parts(island)[0];
 
   const page = path => path.replace(/index\.html$/, '');
 
@@ -294,7 +301,7 @@ const Island = (() => {
     const island = bar();
     if (!island) return null;
     if (named !== undefined) return named;
-    const links = [...island.querySelectorAll('a[href]')];
+    const links = [...island.querySelectorAll('a[href]')].filter(link => link !== brand(island));
     const atFoot = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
     let read = null, top = -Infinity;
     for (const link of links) {
@@ -343,36 +350,39 @@ const Island = (() => {
         middle: (at.top - frame.top + at.height / 2) / frame.height * 100};
     }
 
+    /**
+     * Draws the capsule behind {@code part}, or hides it with none. One that was hidden is set behind
+     * its part before it fades in, rather than sliding there from wherever it was last seen.
+     */
     function draw(part, instant) {
       const capsule = element();
       if (!capsule) return;
       const shape = part ? box(part) : null;
-      if (instant) capsule.style.transition = 'none';
-      capsule.style.opacity = shape ? '1' : '0';
+      const appearing = !instant && shape && capsule.style.opacity !== '1';
+      if (instant || appearing) capsule.style.transition = 'none';
       if (shape) Object.assign(capsule.style, {width: shape.width + 'px', height: shape.height + 'px', top: shape.middle + '%',
         marginTop: -shape.height / 2 + 'px', transform: `translateX(${shape.left}px)`});
+      if (appearing) { capsule.getBoundingClientRect(); capsule.style.transition = ''; }
+      capsule.style.opacity = shape ? '1' : '0';
       if (instant) { capsule.getBoundingClientRect(); capsule.style.transition = ''; }
       shown = part;
     }
 
     /**
      * Puts the capsule where it belongs, sliding there unless {@code instant}. A part a phone hides (the
-     * gallery's link) leaves it on the island's name rather than on nothing.
+     * gallery's link) leaves it hidden.
      */
     function place(instant) {
       if (following) return;
       draw(shownFor(current()), instant);
     }
 
-    function shownFor(part) {
-      const island = bar();
-      return part && !part.getBoundingClientRect().width && island ? parts(island)[0] : part;
-    }
+    const shownFor = part => part && part.getBoundingClientRect().width ? part : null;
 
     /** The part the last island had marked, in this one. */
     function byText(text) {
       const island = bar();
-      return text && island ? parts(island).find(part => said(part) === text && part.matches('a, h1')) || null : null;
+      return text && island ? parts(island).find(part => part !== brand(island) && said(part) === text && part.matches('a')) || null : null;
     }
 
     /**
@@ -415,12 +425,12 @@ const Island = (() => {
   })();
 
   /**
-   * Names the part of the island the page being read is, or with no part the island's name; with
-   * {@code undefined} it goes back to finding it by itself.
+   * Names the part of the island the page being read is, or with none (or the site's name) marks
+   * nothing; with {@code undefined} it goes back to finding it by itself.
    */
   function markPart(part) {
     const island = bar();
-    named = part === undefined ? undefined : part || (island ? parts(island)[0] : null);
+    named = part === undefined ? undefined : part && island && part !== brand(island) ? part : null;
     Mark.place();
   }
 
