@@ -1,6 +1,6 @@
 # Checks the shared kit and tells the project sites to rebuild when it changes.
 #
-# The project sites (zypec/ParticlesPlus, zypec/izomap) copy kit/ into their own build, so a change
+# The project sites (zypec/ParticlesPlus, zypec/izomap, zypec/metrocrafter) copy kit/ into their own build, so a change
 # here reaches them only when they are built again. Sending them a repository_dispatch needs a token
 # that may write to those repositories: a fine-grained personal access token with "Contents: read
 # and write" on them, stored as the KIT_DISPATCH_TOKEN secret. Without it the check still runs and
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repository: [zypec/ParticlesPlus, zypec/izomap]
+        repository: [zypec/ParticlesPlus, zypec/izomap, zypec/metrocrafter]
     steps:
       - name: Ask ${{ matrix.repository }} to rebuild its site
         env:
@@ -46,6 +46,6 @@ jobs:
           if gh api "repos/${{ matrix.repository }}/dispatches" -f event_type=kit-changed 2> said; then exit 0; fi
           cat said
           if grep -q "HTTP 401" said; then
-            echo "::error::KIT_DISPATCH_TOKEN was refused: it has expired or was revoked. Make a new fine-grained token (Contents: read and write on zypec/ParticlesPlus and zypec/izomap) and save it as the secret again. Until then ${{ matrix.repository }} rebuilds on its next push."
+            echo "::error::KIT_DISPATCH_TOKEN was refused: it has expired or was revoked. Make a new fine-grained token (Contents: read and write on zypec/ParticlesPlus, zypec/izomap and zypec/metrocrafter) and save it as the secret again. Until then ${{ matrix.repository }} rebuilds on its next push."
           fi
           exit 1

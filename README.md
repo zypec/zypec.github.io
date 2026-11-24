@@ -11,7 +11,6 @@ It has my portfolio and the pages of my projects:
 ## Layout
 
 - `index.html` and `content.md`: the portfolio. The text lives in `content.md`, so I can edit it without touching HTML.
-- `metrocrafter/`: the MetroCrafter page, set up the same way.
 - `kit/`: the theme and wiki shell shared by my project sites. See [`kit/README.md`](kit/README.md).
 - `maven/`: a Maven repository for the Particles+ API.
 
