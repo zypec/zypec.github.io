@@ -106,6 +106,25 @@ That is only the tip of the iceberg. MetroCrafter is not a plugin added to a ser
 built from the ground up.
 :::
 
+### Apps
+
+::: project
+name: Sudoku
+link: Sudoku/
+status: In development
+color: #0a66d8
+brand: sudoku
+image: Sudoku/gallery/cover.jpg
+caption: The home screen, a hint playing an X-Wing on the board, and the X-Wing's page in training.
+fact: What it is | A Sudoku for iPhone and iPad whose hints teach
+fact: Inside it | A solver with 32 techniques, from Hidden Single to ALS-XZ, that never guesses
+fact: Built with | Swift and SwiftUI, with Claude in Claude Code
+
+A Sudoku that explains itself. Its hints don't say "put a 7 here": they name the technique a good player
+would use next, show where to look and how to spot it, and play the reasoning on the board, case by case.
+Training teaches every technique on real positions.
+:::
+
 ### Statistics and data
 
 *In preparation. The sample is still being collected (n = 0), and we do not publish an estimate whose

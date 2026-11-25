@@ -57,6 +57,7 @@ Current bars:
 | Particles+ | Gallery, Docs, Statistics, Feedback, Portfolio, theme (the wiki: Home, Statistics, Feedback, Portfolio, theme) |
 | Izomap | Gallery, Docs, Portfolio, theme (the wiki: Home, Portfolio, theme) |
 | MetroCrafter | Portfolio, theme |
+| Sudoku | Gallery, Portfolio, theme |
 
 Front and statistics pages write the bar as `<header><a class="home">…</a><nav>…links…<button id="theme">`.
 The wiki builds its bar from `site.links` and links to the front page from `site.front` (see the top of
