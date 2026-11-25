@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repository: [zypec/ParticlesPlus, zypec/izomap, zypec/metrocrafter]
+        repository: [zypec/ParticlesPlus, zypec/izomap, zypec/metrocrafter, zypec/Sudoku]
     steps:
       - name: Ask ${{ matrix.repository }} to rebuild its site
         env:
