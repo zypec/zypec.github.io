@@ -120,9 +120,9 @@ fact: What it is | A Sudoku for iPhone and iPad whose hints teach
 fact: Inside it | A solver with 32 techniques, from Hidden Single to ALS-XZ, that never guesses
 fact: Built with | Swift and SwiftUI, with Claude in Claude Code
 
-A Sudoku that explains itself. Its hints don't say "put a 7 here": they name the technique a good player
-would use next, show where to look and how to spot it, and play the reasoning on the board, case by case.
-Training teaches every technique on real positions.
+Sudoku for iPhone and iPad with hints that teach. Stuck, you get the next logical step rather than the
+answer: the technique it takes, where to look and why it works, played on the board case by case. Training
+teaches the techniques one by one on real positions.
 :::
 
 ### Statistics and data
