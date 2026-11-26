@@ -115,7 +115,7 @@ status: In development
 color: #0a66d8
 brand: sudoku
 image: Sudoku/gallery/cover.jpg
-caption: The home screen, a hint playing an X-Wing on the board, and the X-Wing's page in training.
+caption: The home screen, a hint playing an X-Wing on the board, and the daily puzzle's calendar.
 fact: What it is | A Sudoku for iPhone and iPad whose hints teach
 fact: Inside it | A solver with 32 techniques, from Hidden Single to ALS-XZ, that never guesses
 fact: Built with | Swift and SwiftUI, with Claude in Claude Code
