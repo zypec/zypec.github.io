@@ -159,13 +159,25 @@ footer .legal{flex-basis:100%;font-size:12px;color:var(--muted)}
 /* A picture opened over the page by lightbox.js. */
 dialog.lightbox{border:0;padding:0;background:transparent;max-width:min(96vw,1600px);max-height:94vh;overflow:visible;color:#eee}
 dialog.lightbox:focus{outline:none}
-dialog.lightbox::backdrop{background:#000d}
-dialog.lightbox img{display:block;max-width:100%;max-height:84vh;margin:0 auto;border-radius:var(--r)}
-dialog.lightbox .bar{display:flex;align-items:center;gap:10px;margin-top:12px}
+/* The dark fades in and the bar under the picture follows, while the picture grows out of the gallery. */
+dialog.lightbox::backdrop{background:#000d;opacity:0;transition:opacity .3s}
+dialog.lightbox.open::backdrop{opacity:1}
+dialog.lightbox img{display:block;max-width:100%;max-height:84vh;margin:0 auto;border-radius:var(--r);transform-origin:0 0}
+dialog.lightbox .bar{display:flex;align-items:center;gap:10px;margin-top:12px;opacity:0;transform:translateY(6px);
+  transition:opacity .25s,transform .35s var(--spring)}
+dialog.lightbox.open .bar{opacity:1;transform:none;transition-delay:.12s}
 dialog.lightbox p{flex:1;margin:0 2px;font-size:14px;color:#e8e8ee}
-dialog.lightbox button{height:38px;min-width:38px;padding:0 12px;border:1px solid #ffffff38;border-radius:999px;background:#ffffff14;
-  color:#fff;font:inherit;font-size:15px;cursor:pointer}
-dialog.lightbox button:hover{background:#ffffff2e}
+/* Its buttons are glass over the dark, the same in light and dark, since the dark is always behind them. */
+dialog.lightbox button{width:44px;height:44px;flex:none;display:grid;place-items:center;padding:0;border:0;border-radius:50%;
+  color:#fff;cursor:pointer;background:#ffffff1c;backdrop-filter:blur(16px) saturate(1.6);-webkit-backdrop-filter:blur(16px) saturate(1.6);
+  box-shadow:inset 0 1px 0 #ffffff5c,inset 0 0 0 1px #ffffff24,inset 0 -1px 0 #ffffff1a,0 10px 24px -10px #000a;
+  transition:background-color .15s,transform .3s var(--spring)}
+dialog.lightbox button svg{width:20px;height:20px;display:block}
+dialog.lightbox button:hover{background:#ffffff33}
+dialog.lightbox button:active{transform:scale(.92)}
+dialog.lightbox button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+dialog.lightbox button[hidden]{display:none}
+@media (prefers-reduced-motion:reduce){dialog.lightbox .bar{transform:none}}
 
 .lede{font-size:19px;line-height:1.55;color:var(--ink-2);max-width:60ch;margin:0 0 22px}
 .hero .kicker{margin:0 0 14px;font-size:16px;font-weight:600;line-height:1.3;color:var(--muted)}
