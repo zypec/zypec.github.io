@@ -122,9 +122,23 @@ const Island = (() => {
    */
   let morphs = 0, running = [];
 
+  /**
+   * The parts between the two ends, set while the island morphs where they come to rest. Morphing lays
+   * what the island holds out centered; at rest it is laid from the left, and on a phone, where the
+   * links do not all fit and scroll inside the island, the two differ: the links were centered under
+   * the growing island and jumped toward the brand once it was done.
+   */
+  let placed = [];
+
+  function unplace() {
+    for (const part of placed) Object.assign(part.style, {position: '', left: ''});
+    placed = [];
+  }
+
   function stop(island) {
     for (const animation of running) animation.cancel();
     running = [];
+    unplace();
     island.classList.remove('morphing');
   }
 
@@ -160,6 +174,9 @@ const Island = (() => {
     // morphing, the links are laid out whole, while at rest they scroll inside a narrow island and
     // the theme button sticks to its visible edge. The ride ends where it rests, or it rode to the end
     // of the links, past the edge, and jumped back once the morph was over.
+    const endParts = ends(island).map(([part]) => part);
+    const between = all.filter(part => !endParts.includes(part));
+    const resting = new Map(between.map(part => [part, part.getBoundingClientRect().left]));
     const shifts = new Map();
     for (const [part, side] of ends(island)) {
       land(part);
@@ -171,6 +188,12 @@ const Island = (() => {
       land(part);
     }
     island.classList.add('morphing');
+    for (const part of between) {
+      const shift = resting.get(part) - part.getBoundingClientRect().left;
+      if (Math.abs(shift) < 0.5) continue;
+      Object.assign(part.style, {position: 'relative', left: shift + 'px'});
+      placed.push(part);
+    }
     // It moves as a drop of liquid does: drawn thin while it stretches, past its size for a moment,
     // then settled. The squeeze and the overshoot scale with how far it goes, so a page's name
     // changing in the wiki barely ripples while a jump between sites swells.
@@ -225,6 +248,7 @@ const Island = (() => {
     Mark.follow(growing, from.mark);
     growing.finished.then(() => {
       if (turn !== morphs) return;
+      unplace();
       island.classList.remove('morphing');
       running = [];
     }, () => {});
