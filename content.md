@@ -125,9 +125,6 @@ answer: the technique it takes, where to look and why it works, played on the bo
 teaches the techniques one by one on real positions.
 :::
 
-Projects I no longer update, such as Particles, the free plugin Particles+ grew out of, are in the
-[archive](archive/).
-
 ### Statistics and data
 
 *In preparation. The sample is still being collected (n = 0), and we do not publish an estimate whose
@@ -148,5 +145,7 @@ The easiest way to reach me is by e-mail.
 - GitHub: [github.com/zypec](https://github.com/zypec)
 
 ::: colophon
+Projects I no longer update, such as Particles, are in the [archive](archive/).
+
 yes, this is another vibecoded Claude website 👉👈
 :::
