@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archive</title>
+<meta name="description" content="Emre Kaya's finished projects, kept here with their downloads and docs.">
+<meta property="og:title" content="Archive">
+<meta property="og:description" content="Emre Kaya's finished projects, kept here with their downloads and docs.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%235b3a9e'/%3E%3Cpath fill='%23fff' d='M30.88 73 30.37 71.94 52.7 32.1 56.61 27.21 41.82 28.14 38.27 39.11 32.96 38.31 33.57 25.45H68.93L69.57 26.41L47.3 66.12L43.52 71.21L59.17 69.7L64.03 57.64L69.57 58.66L67.9 73Z'/%3E%3C/svg%3E">
+<script>
+try {
+  const theme = localStorage.getItem('zypec-theme') || localStorage.getItem('pp-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+} catch (unavailable) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:opsz,wght@18..144,400;18..144,700&family=Pixelify+Sans:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../kit/front.css">
+<link rel="stylesheet" href="../archive/archive.css">
+</head>
+<body>
+<header>
+  <a class="home" href="../"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="24" fill="var(--accent)"/><path fill="var(--bg)" d="M30.88 73 30.37 71.94 52.7 32.1 56.61 27.21 41.82 28.14 38.27 39.11 32.96 38.31 33.57 25.45H68.93L69.57 26.41L47.3 66.12L43.52 71.21L59.17 69.7L64.03 57.64L69.57 58.66L67.9 73Z"/></svg>Emre Kaya</a>
+  <nav>
+    <a href="../#projects">Projects</a>
+    <a class="on" href="../archive/">Archive</a>
+    <a class="roomy" href="../#contact">Contact</a>
+    <button id="theme" type="button" aria-live="polite"><span class="icon" aria-hidden="true"></span><span class="text"></span></button>
+  </nav>
+</header>
+<script src="../kit/island.js"></script>
+
+<main class="archive">
+  <h1>Archive</h1>
+  <p class="lede">Projects I no longer update. They stay here with their last version and their docs, for
+  servers that still run them.</p>
+
+  <article class="entry" id="particles">
+    <div class="head"><h2>Particles</h2><span class="years">2021 to 2026</span></div>
+    <span class="state">Archived</span>
+    <p>A particle effects plugin for Minecraft servers: wings, trails, auras and effects that follow players,
+    with colors and a menu to pick them from. Its last version still runs on Minecraft 1.16 to 1.21.11.</p>
+    <dl class="facts">
+      <div><dt>Runs on</dt><dd>Spigot and Paper, 1.16 to 1.21.11</dd></div>
+      <div><dt>Last version</dt><dd>1.0.1, November 2026</dd></div>
+      <div><dt>License</dt><dd>Free, source on GitHub</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="btn primary" href="particles/download/">Download</a>
+      <a class="btn" href="https://treasurestore.gitbook.io/treasure-particles/" target="_blank" rel="noopener">Wiki</a>
+      <a class="btn" href="https://github.com/zypec/Particles" target="_blank" rel="noopener">Source code</a>
+    </div>
+    <div class="successor">
+      <b>Continued as <span class="pp-name">Particles+</span></b>
+      <p>Everything new happens in Particles+: Minecraft up to 26.3, Folia, a web editor with a live preview,
+      3D models and whole scenes. <a href="../ParticlesPlus/">See Particles+</a></p>
+    </div>
+  </article>
+</main>
+<script src="../kit/theme.js"></script>
+</body>
+</html>
