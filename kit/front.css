@@ -163,6 +163,9 @@ dialog.lightbox:focus{outline:none}
 dialog.lightbox::backdrop{background:#000d;opacity:0;transition:opacity .3s}
 dialog.lightbox.open::backdrop{opacity:1}
 dialog.lightbox img{display:block;max-width:100%;max-height:84vh;margin:0 auto;border-radius:var(--r);transform-origin:0 0}
+/* A live element (data-live) is shown as a copy of itself, scaled up inside a box of the size it fills. */
+dialog.lightbox .live{margin:0 auto;transform-origin:0 0}
+dialog.lightbox img[hidden],dialog.lightbox .live[hidden]{display:none}
 dialog.lightbox .bar{display:flex;align-items:center;gap:10px;margin-top:12px;opacity:0;transform:translateY(6px);
   transition:opacity .25s,transform .35s var(--spring)}
 dialog.lightbox.open .bar{opacity:1;transform:none;transition-delay:.12s}
