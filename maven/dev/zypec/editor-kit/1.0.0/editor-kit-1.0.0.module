@@ -1,0 +1,80 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.zypec",
+    "module": "editor-kit",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.8.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 16,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "editor-kit-1.0.0.jar",
+          "url": "editor-kit-1.0.0.jar",
+          "size": 34860,
+          "sha512": "70377ee8555957cf84a61dab105e794abd0505ce75b2d85927a82b2cc0085970f498874a7f117e7a8f54cef7e38c565b8ccc3979b80246568a751640fb630fca",
+          "sha256": "0c3d51cb539be947535131365f60f37d099967ac372beec298576bd35a4efa21",
+          "sha1": "3cbe7005654019acce407d11e95a9fb2829cfa47",
+          "md5": "1794798710fc934ca9b1fcc622614fc9"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 16,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "editor-kit-1.0.0.jar",
+          "url": "editor-kit-1.0.0.jar",
+          "size": 34860,
+          "sha512": "70377ee8555957cf84a61dab105e794abd0505ce75b2d85927a82b2cc0085970f498874a7f117e7a8f54cef7e38c565b8ccc3979b80246568a751640fb630fca",
+          "sha256": "0c3d51cb539be947535131365f60f37d099967ac372beec298576bd35a4efa21",
+          "sha1": "3cbe7005654019acce407d11e95a9fb2829cfa47",
+          "md5": "1794798710fc934ca9b1fcc622614fc9"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "editor-kit-1.0.0-sources.jar",
+          "url": "editor-kit-1.0.0-sources.jar",
+          "size": 11829,
+          "sha512": "882cb910cf2cb0994ad3e7bd96b59202c4e7830030d0115e8c98c133b13d8ffd0d7a6bde5bfb88e7f2250bef2e48a3ebd587f8ac0e691a22e9a27129646766ac",
+          "sha256": "7da5d3ac65fe21ce68620bec9fc330a5487072598d39d26db72d31a99f9b2bab",
+          "sha1": "a521bbdd980f8cdfb855c6fcb55e171710a042ca",
+          "md5": "754e49c148718e157ddffe2dd86b3047"
+        }
+      ]
+    }
+  ]
+}
