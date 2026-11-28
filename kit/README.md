@@ -10,7 +10,7 @@ site, so the sites don't depend on each other at runtime.
 | `wiki.css` | Styles for the wiki shell. |
 | `front.css`, `theme.js` | Styles and theme switch for front pages, statistics pages and the portfolio. |
 | `content.js` | Renders a page from Markdown: `<main data-content="content.md">`, with `::: kind` blocks that the page defines. The format is documented at the top of the file. |
-| `island.js` | The top bar. It animates between pages, shrinks when the page is scrolled and marks the page or section being read. Load it right after `</header>` on every page. |
+| `island.js` | The top bar. It animates between pages, shrinks when the page is scrolled and marks the page or section being read. Load it right after `</header>` on every page. It also counts the visit, through Cloudflare Web Analytics, on the live host only. |
 | `lightbox.js` | Opens gallery images over the page with previous/next/close buttons, arrow keys and Escape: `Lightbox.wire('.gallery a')`. An element marked `data-live` (its value is the label a screen reader reads) opens as a scaled copy of itself, so an animated demo keeps moving. Styles are in `front.css`. |
 
 ## Colors

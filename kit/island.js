@@ -533,3 +533,19 @@ const Island = (() => {
 
   return {measure, morph, around, mark: markPart};
 })();
+
+/*
+ * Visits are counted by Cloudflare Web Analytics, from this file because every page of every site
+ * loads it. The count keeps no cookie and stores nothing on the reader's device, so it needs no
+ * consent banner, and it follows the wiki from page to page as it pushes each one onto the history.
+ * Only the live host is counted: a local preview or a draft is not a visit.
+ */
+(() => {
+  const TOKEN = 'f2a78f72557c401e8ea0583994e39c32';
+  if (location.hostname !== 'zypec.github.io') return;
+  const beacon = document.createElement('script');
+  beacon.defer = true;
+  beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+  beacon.dataset.cfBeacon = JSON.stringify({token: TOKEN});
+  document.head.append(beacon);
+})();
